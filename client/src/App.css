@@ -1,0 +1,75 @@
+@font-face {
+  font-family: 'Merriweather';
+  src: url('fonts/Merriweather-Regular.eot');
+  src: url('fonts/Merriweather-Regular.eot?#iefix') format('embedded-opentype'),
+  url('fonts/Merriweather-Regular.woff2') format('woff2'),
+  url('fonts/Merriweather-Regular.woff') format('woff'),
+  url('fonts/Merriweather-Regular.ttf') format('truetype'),
+  url('fonts/Merriweather-Regular.svg#Merriweather-Regular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-size: 10vmin;
+  font-family: 'Merriweather', sans-serif;
+  color: white;
+}
+
+body {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  background: linear-gradient(90deg, rgb(20, 25, 40), rgb(40, 45, 60));
+  background-size: 400% 400%;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-animation: bga 10s ease infinite;
+  -moz-animation: bga 10s ease infinite;
+  -o-animation: bga 10s ease infinite;
+  animation: bga 10s ease infinite;
+}
+
+::-webkit-scrollbar {
+	width: 1.1vw;
+  height: 1.1vw;
+}
+
+::-webkit-scrollbar-track {
+	background-color: rgb(80, 87, 90);
+}
+
+::-webkit-scrollbar-thumb {
+	border-radius: 15px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+	background-color: rgb(162, 166, 170);
+}
+
+@-webkit-keyframes bga {
+  0% {background-position: 0% 50%}
+  50% {background-position: 100% 50%}
+  100% {background-position: 0% 50%}
+}
+@-moz-keyframes bga {
+  0% {background-position: 0% 50%}
+  50% {background-position: 100% 50%}
+  100% {background-position: 0% 50%}
+}
+@-o-keyframes bga {
+  0% {background-position: 0% 50%}
+  50% {background-position: 100% 50%}
+  100% {background-position: 0% 50%}
+}
+@keyframes bga {
+  0% {background-position: 0% 50%}
+  50% {background-position: 100% 50%}
+  100% {background-position: 0% 50%}
+}

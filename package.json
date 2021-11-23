@@ -1,0 +1,25 @@
+{
+  "name": "gra-w-karty-w-durnia",
+  "version": "0.2.0",
+  "description": "Gra w karty w durnia",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server/index.js",
+    "dev": "nodemon server/index.js",
+    "build": "cd client && npm install && npm run build"
+  },
+  "keywords": [
+    "gra",
+    "karty",
+    "duren",
+    "online"
+  ],
+  "author": "Wojciech Łasocha",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.15",
+    "socket.io": "^4.4.0"
+  }
+}

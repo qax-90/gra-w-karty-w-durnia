@@ -1,0 +1,269 @@
+import React, { useState, useEffect } from 'react';
+import socketIoClient from 'socket.io-client';
+import './App.css';
+import './index.css';
+import './game.css';
+const ENDPOINT = 'ws://127.0.0.1:3001';
+
+function App() {
+  const [ownLoginName, setOwnLoginName] = useState('');
+  const [ownPlayerId, setOwnPlayerId] = useState('');
+  const [ownPlayingRoomId, setOwnPlayingRoomId] = useState('');
+  const [ownRoomMaxPlayers, setOwnRoomMaxPlayers] = useState(2);
+  const [ownRoomDurationTimeMins, setOwnRoomDurationTimeMins] = useState(5);
+  const [ownRoomDurationTimeSecs, setOwnRoomDurationTimeSecs] = useState(0);
+  const [ownRoomLowestCard, setOwnRoomLowestCard] = useState(6);
+  const [loginContainerClass, setLoginContainerClass] = useState('hidden');
+  const [rulesContainerClass, setRulesContainerClass] = useState('hidden');
+  const [roomsContainerClass, setRoomsContainerClass] = useState('hidden');
+  const [customizeContainerClass, setCustomizeContainerClass] = useState('hidden');
+  const [gameContainerClass, setGameContainerClass] = useState('shown');
+  const [loginAccess, setLoginAccess] = useState({
+    promptInfo: 'prompt-info hide',
+    buttonLoginClass: 'hidden',
+    buttonRulesClass: 'shown',
+    buttonLoginDisabled: 'disabled',
+    loginValid: false
+  });
+  const [playingRooms, setPlayingRooms] = useState([{
+    playingRoomId: 0,
+    stateClass: 'waiting',
+    stateName: 'Oczekuje na graczy',
+    maxPlayers: 4,
+    chairs: [{
+      chairId: 0,
+      playerId: 1
+    },
+    {
+      chairId: 1,
+      playerId: 0
+    },
+    {
+      chairId: 2,
+      playerId: 'not-assigned'
+    },
+    {
+      chairId: 3,
+      playerId: 'not-available'
+    }],
+    players: [
+      {
+        playerId: 0,
+        loginName: 'one',
+        elapsedTime: 600
+      },
+      {
+        playerId: 1,
+        loginName: 'two',
+        elapsedTime: 400
+      },
+      {
+        playerId: 2,
+        loginName: 'three',
+        elapsedTime: 500
+      }],
+    durationTime: 621,
+    lowestCard: 6
+  },
+  {
+    playingRoomId: 1,
+    stateClass: 'ready',
+    stateName: 'Gotowa do otwarcia',
+    maxPlayers: 0,
+    chairs: [{
+      chairId: 0,
+      playerId: 'not-assigned'
+    },
+    {
+      chairId: 1,
+      playerId: 'not-assigned'
+    },
+    {
+      chairId: 2,
+      playerId: 'not-assigned'
+    },
+    {
+      chairId: 3,
+      playerId: 'not-assigned'
+    }],
+    players: [
+    ],
+    durationTime: 0,
+    lowestCard: 0
+  }]);
+  useEffect(() => {
+    const socket = socketIoClient();
+    socket.on('login', data => {
+      console.log(data);
+    });
+    setTimeout(function() {
+      setLoginContainerClass('showing');
+      document.getElementById('login-name').focus();
+    }, 26000);
+  }, []);
+  function updateLoginName(loginName) {
+    setOwnLoginName(loginName);
+    let regex = /^(?!\-)[0-9a-zA-Z\-]+$/; // eslint-disable-line
+    let valid = loginName.match(regex);
+    if (valid) {
+      if (loginName.length >= 3) {
+        setLoginAccess( {promptInfo: 'prompt-info hide', buttonLoginClass: 'shown', buttonRulesClass: 'hidden', buttonLoginDisabled: '', loginValid: true} );
+      } else {
+        setLoginAccess( {promptInfo: 'prompt-info hide', buttonLoginClass: 'shown', buttonRulesClass: 'hidden', buttonLoginDisabled: 'disabled', loginValid: false} );
+      }
+    } else {
+      if (loginName.length === 0) {
+        setLoginAccess( {promptInfo: 'prompt-info hide', buttonLoginClass: 'hidden', buttonRulesClass: 'shown', buttonLoginDisabled: 'disabled', loginValid: false} );
+      } else {
+        setLoginAccess( {promptInfo: 'prompt-info shown', buttonLoginClass: 'shown', buttonRulesClass: 'hidden', buttonLoginDisabled: 'disabled', loginValid: false} );
+      }
+    }
+  }
+  function loginUser() {
+    if (loginAccess.loginValid === true) {
+      setLoginContainerClass('hiding');
+      setTimeout(function() {
+        setLoginContainerClass('hidden');
+      }, 2000);
+      setTimeout(function() {
+        setRoomsContainerClass('showing');
+      }, 4000);
+    }
+  }
+  function inputKeyPress(event) {
+    if(event.key === 'Enter'){
+      loginUser();
+    }
+  }
+  function showRules() {
+    setLoginContainerClass('hiding');
+    setTimeout(function() {
+      setLoginContainerClass('hidden');
+    }, 2000);
+    setTimeout(function() {
+      setRulesContainerClass('showing');
+    }, 4000);
+  }
+  function showLogin() {
+    setRulesContainerClass('hiding');
+    setTimeout(function() {
+      setRulesContainerClass('hidden');
+    }, 2000);
+    setTimeout(function() {
+      setLoginContainerClass('showing');
+      document.getElementById('login-name').focus();
+    }, 4000);
+  }
+  function selectRoom(playingRoomId, stateClass) {
+    setOwnPlayingRoomId(playingRoomId);
+    setRoomsContainerClass('hiding');
+    setTimeout(function() {
+      setRoomsContainerClass('hidden');
+    }, 2000);
+    if (stateClass === 'playing') {
+      alert('Nie możesz wejść do tego pokoju ponieważ aktualnie jest on zajęty przez innych graczy i toczy się w nim rozgrywka!')
+    } else if (stateClass === 'ready') {
+      setTimeout(function() {
+        setCustomizeContainerClass('showing');
+      }, 4000);
+    }
+  }
+  function returnToSelectRoom() {
+    setCustomizeContainerClass('hiding');
+    setTimeout(function() {
+      setCustomizeContainerClass('hidden');
+    }, 2000);
+    setTimeout(function() {
+      setRoomsContainerClass('showing');
+    }, 4000);
+  }
+  return (
+    <div className="App">
+      <p className="copyright-text"></p>
+      <p className="welcome-text"></p>
+      <div id="login-container" className={loginContainerClass}>
+        <p>Podaj swój login:</p>
+        <input type="text" id="login-name" name="login-name" maxLength="15" autoComplete="off" value={ownLoginName} onChange={e => updateLoginName(e.target.value)} onKeyPress={inputKeyPress} />
+        <button type="button" className={loginAccess.buttonLoginClass} onClick={loginUser} disabled={loginAccess.buttonLoginDisabled}>Zaloguj się!</button>
+        <button type="button" className={loginAccess.buttonRulesClass} onClick={showRules}>Wyjaśnij mi zasady gry!</button>
+        <p className={loginAccess.promptInfo}>Dopuszczalne są tylko litery od A do Z,<br />cyfry od 0 do 9 oraz znak minus!</p>
+      </div>
+      <div id="rules-container" className={rulesContainerClass}>
+        <p>Zasady gry w karty w&nbsp;durnia:</p>
+        <div>
+          <p>Gra w&nbsp;karty pod nazwą &bdquo;dureń&rdquo; wydaje się być najpopularniejszą grą karcianą w&nbsp;Rosji. Nie jest przesadą twierdzenie, że każdy rosyjski gracz w&nbsp;karty zna tą grę. Durniem w grze pozostaje przegrany &ndash; gracz, któremu zostały karty gdy pozostali się ich pozbyli. Można grać w dowolną liczbę osób od dwóch do sześciu, grając indywidualnie bądź w&nbsp;zespołach po dwóch lub trzech graczy siedzących na przemian. Gra się 36&nbsp;kartami, karty w każdym kolorze (tj. pik, kier, karo, trefl), siła kart od najwyższej do najniższej: as, król, dama, walet, 10, 9, 8, 7, 6.</p>
+          <p>Na początku, rozdający tasuje i&nbsp;rozdaje każdemu graczowi po sześć zakrytych kart. Następnie odsłania się jedną kartę, jej kolor jest atutem. Pozostałe nierozdane karty (nazywane stosem) kładzie się zakryte na górze karty atutowej. Gracze podnoszą swoje karty i&nbsp;oglądają je. Grę zaczyna gracz siedzący na lewo od rozdającego.</p>
+          <p>Gra składa się z serii ataków. Podczas ataku jest atakujący (któremu mogą pomagać inni sprzymierzeni gracze) oraz obrońca (który broni się sam). Atakujący zaczyna poprzez zagranie karty na stół przed obrońcę. Obrońca próbuje odeprzeć atak poprzez zakrycie jej kartą wyższą. Karta atakująca, która nie jest atutem może zostać pobita kartą wyższą tego samego koloru, lub dowolnym atutem. Karta atutowa może być pobita jedynie poprzez zagranie wyższego atutu. Należy zauważyć, że karta nieatutowa może zawsze zostać pobita jakimkolwiek atutem.</p>
+          <p>Jeśli obrońca odeprze pierwszy atak, atakujący może go kontynuować poprzez zagranie kolejnej karty. Również inni przeciwnicy obrońcy (gracze sprzymierzeni z&nbsp;atakującym) mogą dołączyć się do ataku, jeśli mają odpowiednie karty. Jednak główny atakujący ma zawsze pierwszeństwo &ndash; inni mogą dołączyć się jedynie za jego zgodą. Każda nowa dokładana karta atakująca musi być o&nbsp;tej samej figurze co karty dotychczas zagrane podczas ataku, zarówno przez atakującego jak i&nbsp;obrońcę. Ponadto, całkowita liczba kart zagranych przez atakujących podczas ataku nie może przekroczyć sześciu. Jeśli obrońca przed atakiem ma mniej niż sześć kart, liczba kart zagranych przez atakujących nie może być większa niż liczba kart w&nbsp;ręce obrońcy. Obrońca odpiera cały atak gdy pobije wszystkie karty atakujące (maksymalnie sześć) zagrane dotychczas oraz żaden z&nbsp;przeciwników nie może lub nie chce kontynuować ataku lub obrońca nie posiada żadnych kart na ręce i&nbsp;wszystkie jego karty zostały użyte do odparcia ataku. Kiedy atak zostaje odparty, wszystkie karty zagrane w nim (karty atakujące i&nbsp;broniące) zostają odłożone na osobny stos i&nbsp;nie biorą już udziału w tym rozdaniu. Obrońca zostaje atakującym, a&nbsp;gracz na lewo nowym obrońcą.</p>
+          <p>Jeśli obrońca nie może lub nie chce pobić karty atakującej, podnosi ją i&nbsp;staje się częścią ręki obrońcy &ndash; w&nbsp;tym wypadku atak się powiódł i&nbsp;obrońca nie zostaje atakującym. Następnym atakującym jest gracz po lewej od obrońcy a&nbsp;następnym obrońcą gracz po lewej od nowego atakującego.</p>
+          <p>Po zakończeniu ataku, wszyscy gracze którzy mają mniej niż sześć kart muszą uzupełnić swoje ręce do sześciu poprzez pobranie odpowiedniej ilości kart ze stosu. Najpierw dobiera atakujący, później inni gracze, którzy brali udział w&nbsp;ataku w&nbsp;kolejności zgodnej z&nbsp;ruchem wskazówek zegara a&nbsp;na końcu obrońca. Jeśli nie ma wystarczającej ilości kart w&nbsp;stosie, karty pobierane są jak zwykle aż do momentu wyczerpania stosu. Może się zdarzyć, że późniejsi gracze nie pobiorą żadnych kart. Ostatni atut (odkryty) jest pobierany jako ostatnia karta ze stosu. Po wyczerpaniu stosu gra jest kontynuowana bez dobierania.</p>
+          <p>Generalny kierunek gry jest zgodny z&nbsp;ruchem wskazówek zegara. Jeśli atak zostaje odparty, obrońca staje się atakującym a&nbsp;następny gracz w kolejności nowym obrońcą. Jeśli atak się udaje, obrońca nie zostaje atakującym. Nowym atakującym jest następny gracz w&nbsp;kolejności po obrońcy, a&nbsp;nowym obrońcą gracz po lewej od nowego atakującego. Kiedy gracze pozbywają się kart, odpadają z rozgrywki a&nbsp;pozostali kontynuują. Wygrywa gracz, który pierwszy pozbędzie się kart, chyba że przedostatnia karta zostanie pobita &ndash; wtedy jest rozegrane. &bdquo;Durniem&rdquo; zostaje gracz, któremu pozostały karty na ręce.</p>
+        </div>
+        <button type="button" onClick={showLogin}>OK, rozumiem!</button>
+      </div>
+      <div id="rooms-container" className={roomsContainerClass}>
+        <p>Wybierz pokój do gry:</p>
+        <div>
+          {playingRooms.map(item =>
+            <div key={item.playingRoomId} className={item.stateClass} onClick={e => selectRoom(item.playingRoomId, item.stateClass)}>
+              <small data-room-id={(item.playingRoomId + 1)}></small>
+              <div>
+                <div>{(item.playingRoomId + 1)}</div>
+                <div>
+                  <span>Stan: {item.stateName}</span>
+                  <span>Gracze: {((item.stateClass !== 'ready') ? item.players.map(subitem => <span key={subitem.playerId} className="players-text">{subitem.loginName}</span>) : 'żadnych')}</span>
+                  <span>Oczekiwana ilość graczy: {((item.stateClass !== 'ready') ? item.maxPlayers : 'nieustalona')}</span>
+                  <span>Czas dla gracza: {((item.stateClass !== 'ready') ? (Math.floor(item.durationTime / 60) + ' min. ' + ((item.durationTime % 60) >= 10 ? (Math.floor(item.durationTime % 60)) : ('0' + Math.floor(item.durationTime % 60))) + ' sek.') : 'nieokreślony')}</span>
+                  <span>Najniższa karta w talii: {((item.stateClass !== 'ready') ? item.lowestCard : 'nieokreślona')}</span>
+                </div>
+              </div>
+            </div>)}
+        </div>
+      </div>
+      <div id="customize-container" className={customizeContainerClass}>
+        <p>Dostosuj nowy pokój:</p>
+        <div>
+          <div>
+            <big data-room-id={ownPlayingRoomId}></big>
+            <div>
+              <div>
+                <span>Administrator:</span>
+                <input type="text" id="admin-name" name="admin-name" value={ownLoginName} disabled />
+              </div>
+              <div>
+                <span>Oczekiwana ilość graczy:</span>
+                <select id="players-amount" name="players-amount" value={ownRoomMaxPlayers} onChange={e => setOwnRoomMaxPlayers(e.target.value)}>
+                  <option value="2">2 &ndash; dwóch graczy</option>
+                  <option value="3">3 &ndash; trzech graczy</option>
+                  <option value="4">4 &ndash; czterech graczy</option>
+                </select>
+              </div>
+              <div>
+                <span>Całkowity czas dla gracza:</span>
+                <input type="number" id="duration-time-mins" name="duration-time-mins" value={ownRoomDurationTimeMins} min="1" max="60" step="1" onChange={e => setOwnRoomDurationTimeMins(e.target.value)} />
+                <span className="mins-label">min.</span>
+                <input type="number" id="duration-time-secs" name="duration-time-secs" value={ownRoomDurationTimeSecs} min="0" max="59" step="1" onChange={e => setOwnRoomDurationTimeSecs(e.target.value)} />
+                <span className="secs-label">sek.</span>
+              </div>
+              <div>
+                <span>Najniższa karta w talii:</span>
+                <select id="lowest-card" name="lowest-card" value={ownRoomLowestCard} onChange={e => setOwnRoomLowestCard(e.target.value)}>
+                  <option value="2">2 &ndash; dwójka</option>
+                  <option value="3">3 &ndash; trójka</option>
+                  <option value="4">4 &ndash; czwórka</option>
+                  <option value="5">5 &ndash; piątka</option>
+                  <option value="6">6 &ndash; szóstka</option>
+                </select>
+              </div>
+            </div>
+            <hr />
+            <button type="button">Otwórz nowy pokój!</button>
+            <button type="button" onClick={returnToSelectRoom}>Przejdź do poprzedniej strony!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default App;

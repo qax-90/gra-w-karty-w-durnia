@@ -1,0 +1,351 @@
+p.copyright-text, p.welcome-text {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+p.copyright-text {
+  opacity: 0;
+  animation-delay: 2s;
+  animation-duration: 10s;
+  animation-name: showing-starting;
+}
+
+p.welcome-text {
+  opacity: 0;
+  animation-delay: 14s;
+  animation-duration: 10s;
+  animation-name: showing-starting;
+}
+
+p.copyright-text::before {
+  content: 'Copyright © 2021 by qax';
+}
+
+p.welcome-text::before {
+  content: 'Witaj w mojej grze';
+}
+
+span.players-text:not(:last-child)::after {
+  content: ', ';
+}
+
+div#login-container {
+  position: absolute;
+  width: 100%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+div#rooms-container, div#customize-container {
+  position: absolute;
+  width: 100%;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+div#rules-container {
+  position: absolute;
+  width: 70%;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+div#game-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+}
+
+div#login-container.hidden, div#rules-container.hidden, div#rooms-container.hidden, div#customize-container.hidden, div#game-container.hidden {
+  display: none;
+}
+
+div#login-container.showing, div#rules-container.showing, div#rooms-container.showing, div#customize-container.showing, div#game-container.showing {
+  display: block;
+  animation-duration: 5s;
+  animation-fill-mode: forwards;
+  animation-name: showing-container;
+}
+
+div#login-container.hiding, div#rules-container.hiding, div#rooms-container.hiding, div#customize-container.hiding, div#game-container.hiding {
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
+  animation-name: hiding-container;
+}
+
+div#rooms-container > div, div#customize-container > div {
+  display: inline-block;
+}
+
+div#rooms-container > div > div {
+  margin: 0.4rem auto;
+  padding: 0.3rem;
+  font-size: 0.27rem;
+  border-radius: 5px;
+  background-color: rgb(40, 47, 60);
+  transition-property: background-color;
+  transition-duration: 1s;
+}
+
+div#customize-container > div {
+  margin: 0.4rem auto;
+  padding: 0.3rem;
+  font-size: 0.27rem;
+  border-radius: 5px;
+  background-color: rgb(40, 47, 60);
+}
+
+div#rules-container > div {
+  margin: 0.4rem auto;
+  padding: 0.3rem;
+  font-size: 0.27rem;
+}
+
+div#rules-container > div > p {
+  margin: 0.3rem 0;
+  text-align: justify;
+  text-indent: 1rem;
+}
+
+div#rules-container > div > p:first-of-type {
+  margin-top: 0;
+}
+
+div#rules-container > div > p:last-of-type {
+  margin-bottom: 0;
+}
+
+div#rooms-container > div > div.ready:hover,
+div#rooms-container > div > div.waiting:hover {
+  background-color: rgb(50, 58, 72);
+  cursor: pointer;
+}
+
+div#rooms-container > div > div.playing:hover {
+  background-color: rgb(50, 58, 72);
+  cursor: not-allowed;
+}
+
+div#rooms-container > div > div > div {
+  display: flex;
+  overflow: hidden;
+  text-align: left;
+}
+
+div#rooms-container > div > div > div > div:first-of-type {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.9rem;
+  height: 0.9rem;
+  margin-left: 0.07rem;
+  margin-right: 0.3rem;
+  font-size: 0.6rem;
+  border: 1px solid silver;
+  border-radius: 50%;
+  background-color: rgb(60, 77, 90);
+  transition-property: background-color;
+  transition-duration: 1s;
+}
+
+div#rooms-container > div > div > small, div#customize-container > div > div > big {
+  display: block;
+  margin-bottom: 0.2rem;
+  text-align: center;
+  color: silver;
+  transition-property: color;
+  transition-duration: 1s;
+}
+
+div#rooms-container > div > div > small::before {
+  content: 'To jest pokój numer ' attr(data-room-id);
+}
+
+div#customize-container > div > div > big::before {
+  content: 'Ustawienia nowego pokoju numer ' attr(data-room-id);
+}
+
+div#rooms-container > div > div > div > div > span,
+div#customize-container > div > div > div > div > span:first-of-type {
+  display: block;
+}
+
+div#customize-container > div > div > div > div {
+  margin: 0.4rem auto 0.1rem auto;
+}
+
+div#customize-container > div > div > div > div > input[type="text"],
+div#customize-container > div > div > div > div > select {
+  display: block;
+}
+
+div#customize-container > div > div > div > div > input[type="text"],
+div#customize-container > div > div > div > div > input[type="number"],
+div#customize-container > div > div > div > div > select {
+  margin: 0.2rem auto 0.1rem auto;
+  padding: 0.1rem 0.3rem;
+  font-size: 0.27rem;
+  font-family: 'Merriweather', sans-serif;
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid white;
+  border-radius: 5px;
+  background-color: rgb(50, 55, 70);
+}
+
+div#customize-container > div > div > div > div > span.mins-label {
+  margin-left: 0.15rem;
+  margin-right: 0.25rem;
+}
+
+div#customize-container > div > div > div > div > span.secs-label {
+  margin-left: 0.15rem;
+}
+
+div#login-container > p, div#rules-container > p, div#rooms-container > p, div#customize-container > p {
+  font-size: 0.6rem;
+  margin: 0.4rem auto 0.2rem auto;
+}
+
+div#login-container > p.prompt-info {
+  font-size: 0.27rem;
+  color: rgb(240, 20, 10);
+}
+
+div#login-container > p.prompt-info.show {
+  visibility: visible;
+}
+
+div#login-container > p.prompt-info.hide {
+  visibility: hidden;
+}
+
+div#rooms-container > div > div.ready:hover > div > div:first-of-type {
+  background-color: rgb(9, 173, 22);
+}
+
+div#rooms-container > div > div.waiting:hover > div > div:first-of-type {
+  background-color: rgb(179, 179, 9);
+}
+
+div#rooms-container > div > div.playing:hover > div > div:first-of-type {
+  background-color: rgb(191, 50, 11);
+}
+
+div#rooms-container > div > div.ready:hover > small {
+  color: rgb(9, 173, 22);
+}
+
+div#rooms-container > div > div.waiting:hover > small {
+  color: rgb(179, 179, 9);
+}
+
+div#rooms-container > div > div.playing:hover > small {
+  color: rgb(191, 50, 11);
+}
+
+div#rooms-container > div > div.ready:hover > small::before {
+  content: 'Możesz stworzyć nowy pokój do gry';
+}
+
+div#rooms-container > div > div.waiting:hover > small::before {
+  content: 'Możesz dołączyć do oczekujących graczy';
+}
+
+div#rooms-container > div > div.playing:hover > small::before {
+  content: 'Nie możesz dołączyć do toczącej się gry';
+}
+
+div#login-container > input[type="text"] {
+  display: block;
+  margin: 0.25rem auto;
+  padding: 0 0 0.1rem 0;
+  width: 4rem;
+  font-size: 0.4rem;
+  font-family: 'Merriweather', sans-serif;
+  outline: none;
+  border: none;
+  border-bottom: 2px dashed white;
+  background: none;
+  color: white;
+}
+
+button {
+  display: block;
+  padding: 0.1rem 0.3rem;
+  font-size: 0.27rem;
+  font-family: 'Merriweather', sans-serif;
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid white;
+  border-radius: 5px;
+  background-color: rgb(50, 55, 70);
+}
+
+hr {
+  margin: 0.4rem auto 0.35rem auto;
+}
+
+div#login-container button, div#rules-container button {
+  margin: 0.6rem auto;
+}
+
+div#login-container button.hidden {
+  display: none;
+}
+
+div#customize-container button, div#game-container button {
+  margin: 0 auto;
+}
+
+div#customize-container button:last-of-type {
+  margin: 0.2rem auto 0 auto;
+}
+
+div#login-container > button:disabled {
+  color: rgba(200, 200, 200, 0.6);
+  background-color: rgb(40, 45, 65);
+}
+
+@keyframes showing-starting {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes showing-container {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes hiding-container {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
