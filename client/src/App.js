@@ -7,8 +7,8 @@ const ENDPOINT = 'ws://127.0.0.1:3001';
 
 function App() {
   const [ownLoginName, setOwnLoginName] = useState('');
-  const [ownPlayerId, setOwnPlayerId] = useState('');
-  const [ownPlayingRoomId, setOwnPlayingRoomId] = useState('');
+  const [ownPlayerId, setOwnPlayerId] = useState();
+  const [ownPlayingRoomId, setOwnPlayingRoomId] = useState(0);
   const [ownRoomMaxPlayers, setOwnRoomMaxPlayers] = useState(2);
   const [ownRoomDurationTimeMins, setOwnRoomDurationTimeMins] = useState(5);
   const [ownRoomDurationTimeSecs, setOwnRoomDurationTimeSecs] = useState(0);
@@ -259,6 +259,21 @@ function App() {
             <hr />
             <button type="button">Otwórz nowy pokój!</button>
             <button type="button" onClick={returnToSelectRoom}>Przejdź do poprzedniej strony!</button>
+          </div>
+        </div>
+      </div>
+      <div id="game-container" className={gameContainerClass}>
+        <div>
+          <div id="table">Stół</div>
+          <div id="aside">
+            <div id="chairs">
+            {playingRooms[ownPlayingRoomId].chairs.map((item, index) =>
+              <div className="chair">
+                <div>Krzesło {(item.chairId + 1)}</div>
+                <div>{(item.playerId !== 'not-available') ? ((item.playerId !== 'not-assigned') ? <span className="chair-busy">{playingRooms[ownPlayingRoomId].players[index].loginName}</span> : <button type="button">Usiądź</button>) : <span className="chair-not-available">Niedostępne</span>}</div>
+              </div>
+            )}
+            </div>
           </div>
         </div>
       </div>
