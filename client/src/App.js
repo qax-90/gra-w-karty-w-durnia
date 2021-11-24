@@ -274,6 +274,22 @@ function App() {
               </div>
             )}
             </div>
+            <div id="actions">
+              <div className="actions">
+                <div>Wykonaj akcję</div>
+                <div>
+                  <button type="button">Połóż</button>
+                  <button type="button">Zabierz</button>
+                  <button type="button">Spasuj</button>
+                </div>
+              </div>
+            </div>
+            <div id="chat">
+              <div className="chat">
+                <div>Czat grupowy</div>
+                <div></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

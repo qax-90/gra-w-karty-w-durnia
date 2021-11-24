@@ -1,16 +1,24 @@
+div#game-container > div > div#aside > div#chairs button {
+  margin: 0 auto;
+}
+
+div#game-container > div > div#aside > div#actions button {
+  margin: 0;
+}
+
 div#game-container > div {
   display: flex;
   width: 100%;
   height: 100%;
 }
 
-@media (max-aspect-ratio: 5/4) {
+@media (max-aspect-ratio: 5/3) {
   div#game-container > div {
     flex-direction: column;
   }
 }
 
-@media (min-aspect-ratio: 5/4) {
+@media (min-aspect-ratio: 5/3) {
   div#game-container > div {
     flex-direction: row;
   }
@@ -22,36 +30,62 @@ div#game-container > div > div#table {
 }
 
 div#game-container > div > div#aside {
+  display: flex;
+  flex-direction: column;
   flex: 0 0 30%;
   background-color: rgb(40, 47, 60);
 }
 
 div#game-container > div > div#aside > div#chairs {
   display: grid;
-  padding: 0.2rem 0.1rem;
+  margin: 0.2rem 0.1rem 0.05rem 0.1rem;
   grid-template-columns: 1fr 1fr;
 }
 
-div#aside > div#chairs > div.chair {
+div#game-container > div > div#aside > div#actions {
+  display: grid;
+  margin: 0.05rem 0.1rem 0.05rem 0.1rem;
+}
+
+div#game-container > div > div#aside > div#chat {
+  display: grid;
+  flex: 1 1 auto;
+  margin: 0.05rem 0.1rem 0.2rem 0.1rem;
+}
+
+div#aside > div#chairs > div.chair,
+div#aside > div#actions > div.actions,
+div#aside > div#chat > div.chat {
+  display: flex;
+  flex-direction: column;
   margin: 0.1rem;
-  font-size: 0.3rem;
+  font-size: 0.27rem;
   text-align: center;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-top-left-radius: 0.15rem;
   border-top-right-radius: 0.15rem;
 }
-div#aside > div#chairs > div.chair > div:first-of-type {
-  padding: 0.1rem;
+
+div#aside > div#chairs > div.chair > div:first-of-type,
+div#aside > div#actions > div.actions > div:first-of-type,
+div#aside > div#chat > div.chat > div:first-of-type {
+  padding: 0.2rem 0;
   border-top-left-radius: 0.15rem;
   border-top-right-radius: 0.15rem;
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-div#aside > div#chairs > div.chair > div:last-of-type {
+div#aside > div#chairs > div.chair > div:last-of-type,
+div#aside > div#actions > div.actions > div:last-of-type {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
   height: 0.85rem;
+  background-color: rgba(0, 0, 0, 0.16);
+}
+
+div#aside > div#chat > div.chat > div:last-of-type {
+  flex: 1 1 auto;
   background-color: rgba(0, 0, 0, 0.16);
 }
 
