@@ -13,6 +13,8 @@ function App() {
   const [ownRoomDurationTimeMins, setOwnRoomDurationTimeMins] = useState(5);
   const [ownRoomDurationTimeSecs, setOwnRoomDurationTimeSecs] = useState(0);
   const [ownRoomLowestCard, setOwnRoomLowestCard] = useState(6);
+  const [ownChatMessage, setOwnChatMessage] = useState('');
+  const [buttonSendChatMessageDisabled, setButtonSendChatMessageDisabled] = useState('disabled');
   const [loginContainerClass, setLoginContainerClass] = useState('hidden');
   const [rulesContainerClass, setRulesContainerClass] = useState('hidden');
   const [roomsContainerClass, setRoomsContainerClass] = useState('hidden');
@@ -119,6 +121,14 @@ function App() {
       }
     }
   }
+  function updateChatMessage(chatMessage) {
+    setOwnChatMessage(chatMessage);
+    if (chatMessage.length >= 1) {
+      setButtonSendChatMessageDisabled('');
+    } else {
+      setButtonSendChatMessageDisabled(' disabled');
+    }
+  }
   function loginUser() {
     if (loginAccess.loginValid === true) {
       setLoginContainerClass('hiding');
@@ -130,9 +140,17 @@ function App() {
       }, 4000);
     }
   }
-  function inputKeyPress(event) {
+  function sendChatMessage() {
+    alert('ok');
+  }
+  function inputKeyPressToLogin(event) {
     if(event.key === 'Enter'){
       loginUser();
+    }
+  }
+  function inputKeyPressToSendChatMessage(event) {
+    if(event.key === 'Enter'){
+      sendChatMessage();
     }
   }
   function showRules() {
@@ -183,7 +201,7 @@ function App() {
       <p className="welcome-text"></p>
       <div id="login-container" className={loginContainerClass}>
         <p>Podaj swój login:</p>
-        <input type="text" id="login-name" name="login-name" maxLength="15" autoComplete="off" value={ownLoginName} onChange={e => updateLoginName(e.target.value)} onKeyPress={inputKeyPress} />
+        <input type="text" id="login-name" name="login-name" maxLength="15" autoComplete="off" value={ownLoginName} onChange={e => updateLoginName(e.target.value)} onKeyPress={inputKeyPressToLogin} />
         <button type="button" className={loginAccess.buttonLoginClass} onClick={loginUser} disabled={loginAccess.buttonLoginDisabled}>Zaloguj się!</button>
         <button type="button" className={loginAccess.buttonRulesClass} onClick={showRules}>Wyjaśnij mi zasady gry!</button>
         <p className={loginAccess.promptInfo}>Dopuszczalne są tylko litery od A do Z,<br />cyfry od 0 do 9 oraz znak minus!</p>
@@ -289,7 +307,7 @@ function App() {
                 <div>Czat grupowy</div>
                 <div>
                   <div>Witaj!</div>
-                  <div><input type="text" id="chat-message" name="chat-message" size="1" value="" /><button type="button">Wyślij</button></div>
+                  <div><input type="text" id="chat-message" name="chat-message" autoComplete="off" size="1" maxLength="100" value={ownChatMessage} onChange={e => updateChatMessage(e.target.value)} onKeyPress={inputKeyPressToSendChatMessage} /><button type="button" onClick={sendChatMessage} disabled={buttonSendChatMessageDisabled}>Wyślij</button></div>
                 </div>
               </div>
             </div>
