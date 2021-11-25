@@ -49,18 +49,15 @@ function App() {
     players: [
       {
         playerId: 0,
-        loginName: 'one',
-        elapsedTime: 600
+        loginName: 'one'
       },
       {
         playerId: 1,
-        loginName: 'two',
-        elapsedTime: 400
+        loginName: 'two'
       },
       {
         playerId: 2,
-        loginName: 'three',
-        elapsedTime: 500
+        loginName: 'three'
       }],
     durationTime: 621,
     lowestCard: 6
@@ -91,6 +88,9 @@ function App() {
     durationTime: 0,
     lowestCard: 0
   }]);
+  const [playersElapsedTime, setPlayersElapsedTime] = useState([
+    [600, 400, 400], []
+  ]);
   useEffect(() => {
     const socket = socketIoClient();
     socket.on('login', data => {
@@ -278,16 +278,19 @@ function App() {
               <div className="actions">
                 <div>Wykonaj akcję</div>
                 <div>
-                  <button type="button">Połóż</button>
-                  <button type="button">Zabierz</button>
-                  <button type="button">Spasuj</button>
+                  <button type="button" disabled>Połóż</button>
+                  <button type="button" disabled>Zabierz</button>
+                  <button type="button" disabled>Spasuj</button>
                 </div>
               </div>
             </div>
             <div id="chat">
               <div className="chat">
                 <div>Czat grupowy</div>
-                <div></div>
+                <div>
+                  <div>Witaj!</div>
+                  <div><input type="text" id="chat-message" name="chat-message" size="1" value="" /><button type="button">Wyślij</button></div>
+                </div>
               </div>
             </div>
           </div>

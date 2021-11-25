@@ -6,6 +6,24 @@ div#game-container > div > div#aside > div#actions button {
   margin: 0;
 }
 
+div#game-container > div > div#aside > div#chat button {
+  display: inline-block;
+  margin: 0 0 0 0.1rem;
+}
+
+div#game-container > div > div#aside > div#chat input[type="text"] {
+  display: inline-block;
+  flex: 1 1 auto;
+  margin: 0 0.1rem 0 0;
+  padding: 0.1rem 0.27rem;
+  font-size: 0.27rem;
+  font-family: 'Merriweather', sans-serif;
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid white;
+  border-radius: 5px;
+  background-color: rgb(50, 55, 70);
+}
+
 div#game-container > div {
   display: flex;
   width: 100%;
@@ -51,6 +69,25 @@ div#game-container > div > div#aside > div#chat {
   display: grid;
   flex: 1 1 auto;
   margin: 0.05rem 0.1rem 0.2rem 0.1rem;
+}
+
+div#game-container > div > div#aside > div#chat > div > div:last-of-type {
+  display: flex;
+  flex-direction: column;
+}
+
+div#game-container > div > div#aside > div#chat > div > div:last-of-type > div:first-of-type {
+  flex: 1 1 auto;
+  align-self: stretch;
+  margin: 0.2rem;
+  text-align: left;
+  min-height: 1rem;
+  overflow-y: scroll;
+}
+
+div#game-container > div > div#aside > div#chat > div > div:last-of-type > div:last-of-type {
+  display: flex;
+  padding: 0.2rem;
 }
 
 div#aside > div#chairs > div.chair,

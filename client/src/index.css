@@ -275,7 +275,7 @@ div#login-container > input[type="text"] {
   margin: 0.25rem auto;
   padding: 0 0 0.1rem 0;
   width: 4rem;
-  font-size: 0.27rem;
+  font-size: 0.4rem;
   font-family: 'Merriweather', sans-serif;
   outline: none;
   border: none;
@@ -293,6 +293,11 @@ button {
   border: 1px solid white;
   border-radius: 5px;
   background-color: rgb(50, 55, 70);
+}
+
+button:disabled {
+  color: rgba(200, 200, 200, 0.6);
+  background-color: rgb(40, 45, 65);
 }
 
 hr {
@@ -313,11 +318,6 @@ div#customize-container button {
 
 div#customize-container button:last-of-type {
   margin: 0.2rem auto 0 auto;
-}
-
-div#login-container > button:disabled {
-  color: rgba(200, 200, 200, 0.6);
-  background-color: rgb(40, 45, 65);
 }
 
 @keyframes showing-starting {
