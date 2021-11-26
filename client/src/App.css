@@ -12,18 +12,19 @@
 }
 
 html, body {
+  top: 0;
+  left: 0;
   margin: 0;
   padding: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   font-size: 10vmin;
   font-family: 'Merriweather', sans-serif;
   color: white;
 }
 
 body {
-  overflow-x: hidden;
-  overflow-y: scroll;
+  overflow: hidden;
   background: linear-gradient(90deg, rgb(20, 25, 40), rgb(40, 45, 60));
   background-size: 400% 400%;
   -webkit-touch-callout: none;
@@ -72,4 +73,12 @@ body {
   0% {background-position: 0% 50%}
   50% {background-position: 100% 50%}
   100% {background-position: 0% 50%}
+}
+
+div.App {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
 }

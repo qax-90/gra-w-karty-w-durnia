@@ -1,3 +1,46 @@
+div#game-container > div {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+div#game-container > div > div#aside > div#chairs {
+  display: grid;
+  margin: 0.2rem 0.1rem 0.05rem 0.1rem;
+}
+
+@media (max-aspect-ratio: 12/13) {
+  div#game-container > div {
+    flex-direction: column;
+  }
+  div#game-container > div > div#aside > div#chairs {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+}
+
+@media (min-aspect-ratio: 12/13) {
+  div#game-container > div {
+    flex-direction: row;
+  }
+  div#game-container > div > div#aside {
+    min-width: 6rem;
+  }
+  div#game-container > div > div#aside > div#chairs {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+div#game-container > div > div#table {
+  flex: 1 1 auto;
+  background-color: transparent;
+}
+
+div#game-container > div > div#aside {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(40, 47, 60);
+}
+
 div#game-container > div > div#aside > div#chairs button {
   margin: 0 auto;
 }
@@ -24,42 +67,6 @@ div#game-container > div > div#aside > div#chat input[type="text"] {
   background-color: rgb(50, 55, 70);
 }
 
-div#game-container > div {
-  display: flex;
-  width: 100%;
-  height: 100%;
-}
-
-@media (max-aspect-ratio: 5/3) {
-  div#game-container > div {
-    flex-direction: column;
-  }
-}
-
-@media (min-aspect-ratio: 5/3) {
-  div#game-container > div {
-    flex-direction: row;
-  }
-}
-
-div#game-container > div > div#table {
-  flex: 0 0 70%;
-  background-color: transparent;
-}
-
-div#game-container > div > div#aside {
-  display: flex;
-  flex-direction: column;
-  flex: 0 0 30%;
-  background-color: rgb(40, 47, 60);
-}
-
-div#game-container > div > div#aside > div#chairs {
-  display: grid;
-  margin: 0.2rem 0.1rem 0.05rem 0.1rem;
-  grid-template-columns: 1fr 1fr;
-}
-
 div#game-container > div > div#aside > div#actions {
   display: grid;
   margin: 0.05rem 0.1rem 0.05rem 0.1rem;
@@ -81,7 +88,7 @@ div#game-container > div > div#aside > div#chat > div > div:last-of-type > div:f
   align-self: stretch;
   margin: 0.2rem;
   text-align: left;
-  min-height: 1rem;
+  min-height: 0.8rem;
   overflow-y: scroll;
 }
 
