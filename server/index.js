@@ -72,15 +72,19 @@ var playingRooms = [{
 	lowestCard: 0
 }];
 
-function currentTime(time) {
+function currentTime(time, showMilisecs = true) {
 	let hours = (time.getHours() < 10) ? '0' + time.getHours() : time.getHours();
 	let minutes = (time.getMinutes() < 10) ? '0' + time.getMinutes() : time.getMinutes();
 	let seconds = (time.getSeconds() < 10) ? '0' + time.getSeconds() : time.getSeconds();
-	let milliseconds = 0;
-	if (time.getMilliseconds() < 10) milliseconds = '00' + time.getMilliseconds();
-	else if (time.getMilliseconds() < 100) milliseconds = '0' + time.getMilliseconds();
-	else milliseconds = time.getMilliseconds();
-	return hours + ':' + minutes + ':' + seconds + ',' + milliseconds;
+	if (showMilisecs === true) {
+		let milliseconds = 0;
+		if (time.getMilliseconds() < 10) milliseconds = '00' + time.getMilliseconds();
+		else if (time.getMilliseconds() < 100) milliseconds = '0' + time.getMilliseconds();
+		else milliseconds = time.getMilliseconds();
+		return hours + ':' + minutes + ':' + seconds + ',' + milliseconds;
+	} else if (showMilisecs === false) {
+		return hours + ':' + minutes + ':' + seconds;
+	}
 }
 
 app.use(express.static(path.join(__dirname, '../client/build')));
@@ -140,11 +144,15 @@ io.on('connection', (socket) => {
 		playingRooms[playingRoomId].players.push({socketId: socketId, playerId: playerId, loginName: loginName});
 		io.to(socketId).emit('join-room', {playerId: playerId});
 		socket.join(playingRoomId);
-		socket.emit('playing-rooms', {playingRooms: playingRooms});
+		io.emit('playing-rooms', {playingRooms: playingRooms});
 		console.log(currentTime(new Date(time)) + ' - Klient o nazwie użytkownika ' + loginName + ' stworzył nowy pokój o ID ' + playingRoomId);
 	});
 	socket.on('chat-message', (data) => {
 		time = Date.now();
-		io.emit('chat-message', {data: data, time: time, loginName: playingRooms[0].players.find(player => player.socketId === socket.id).loginName});
+		let message = data.message;
+		let playingRoomId = data.playingRoomId;
+		let addTime = currentTime(new Date(time), false);
+		let loginName = playingRooms[playingRoomId].players.find(player => player.socketId === socket.id).loginName;
+		io.in(playingRoomId).emit('chat-message', {message: message, addTime: addTime, loginName: loginName});
 	});
 });

@@ -44,6 +44,7 @@ function App() {
       let temp = chatBox;
       temp.push(data);
       setChatBox([...temp]);
+      document.getElementById('chat-box').scrollTop = document.getElementById('chat-box').scrollHeight;
     });
     setTimeout(function() {
       setLoginContainerClass('showing');
@@ -89,7 +90,7 @@ function App() {
     }
   }
   function sendChatMessage() {
-    socket.emit('chat-message', ownChatMessage);
+    socket.emit('chat-message', {message: ownChatMessage, playingRoomId: ownPlayingRoomId});
     setOwnChatMessage('');
   }
   function inputKeyPressToLogin(event) {
@@ -275,8 +276,12 @@ function App() {
               <div className="chat">
                 <div>Czat grupowy</div>
                 <div>
-                  <div>{chatBox.map(item => <div>{item}</div>)}</div>
-                  <div><input type="text" id="chat-message" name="chat-message" autoComplete="off" size="1" maxLength="100" value={ownChatMessage} onChange={e => updateChatMessage(e.target.value)} onKeyPress={inputKeyPressToSendChatMessage} /><button type="button" onClick={sendChatMessage} disabled={buttonSendChatMessageDisabled}>Wyślij</button></div>
+                  <div id="chat-box">{chatBox.map((item, index) => <div key={'chat-' + index} title={'Czas nadania: ' + item.addTime}><strong>{item.loginName}:</strong> {item.message}</div>)}
+                  </div>
+                  <div>
+                    <input type="text" id="chat-message" name="chat-message" autoComplete="off" size="1" maxLength="100" value={ownChatMessage} onChange={e => updateChatMessage(e.target.value)} onKeyPress={inputKeyPressToSendChatMessage} />
+                    <button type="button" onClick={sendChatMessage} disabled={buttonSendChatMessageDisabled}>Wyślij</button>
+                  </div>
                 </div>
               </div>
             </div>

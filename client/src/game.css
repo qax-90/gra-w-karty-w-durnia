@@ -9,24 +9,30 @@ div#game-container > div > div#aside > div#chairs {
   margin: 0.2rem 0.1rem 0.05rem 0.1rem;
 }
 
-@media (max-aspect-ratio: 12/13) {
+@media (max-aspect-ratio: 1/1) {
   div#game-container > div {
     flex-direction: column;
   }
   div#game-container > div > div#aside > div#chairs {
     grid-template-columns: 1fr 1fr 1fr 1fr;
   }
+  div#game-container > div > div#aside > div#chat > div > div:last-of-type > div:first-of-type {
+    height: 1rem;
+  }
 }
 
-@media (min-aspect-ratio: 12/13) {
+@media (min-aspect-ratio: 1/1) {
   div#game-container > div {
     flex-direction: row;
   }
   div#game-container > div > div#aside {
-    min-width: 6rem;
+    flex: 0 0 5.9rem;
   }
   div#game-container > div > div#aside > div#chairs {
     grid-template-columns: 1fr 1fr;
+  }
+  div#game-container > div > div#aside > div#chat > div > div:last-of-type > div:first-of-type {
+    height: 2.85rem;
   }
 }
 
@@ -84,11 +90,9 @@ div#game-container > div > div#aside > div#chat > div > div:last-of-type {
 }
 
 div#game-container > div > div#aside > div#chat > div > div:last-of-type > div:first-of-type {
-  flex: 1 1 auto;
   align-self: stretch;
-  margin: 0.2rem;
+  margin: 0.2rem 0.2rem 0 0.2rem;
   text-align: left;
-  min-height: 0.8rem;
   overflow-y: scroll;
 }
 
