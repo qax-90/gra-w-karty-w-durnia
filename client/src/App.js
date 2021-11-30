@@ -4,22 +4,24 @@ import './App.css';
 import './index.css';
 import './game.css';
 const ENDPOINT = 'ws://127.0.0.1:3001';
+const socket = socketIoClient.connect(ENDPOINT);
 
 function App() {
   const [ownLoginName, setOwnLoginName] = useState('');
   const [ownPlayerId, setOwnPlayerId] = useState();
-  const [ownPlayingRoomId, setOwnPlayingRoomId] = useState(0);
+  const [ownPlayingRoomId, setOwnPlayingRoomId] = useState();
   const [ownRoomMaxPlayers, setOwnRoomMaxPlayers] = useState(2);
   const [ownRoomDurationTimeMins, setOwnRoomDurationTimeMins] = useState(5);
   const [ownRoomDurationTimeSecs, setOwnRoomDurationTimeSecs] = useState(0);
   const [ownRoomLowestCard, setOwnRoomLowestCard] = useState(6);
   const [ownChatMessage, setOwnChatMessage] = useState('');
+  const [chatBox, setChatBox] = useState([]);
   const [buttonSendChatMessageDisabled, setButtonSendChatMessageDisabled] = useState('disabled');
   const [loginContainerClass, setLoginContainerClass] = useState('hidden');
   const [rulesContainerClass, setRulesContainerClass] = useState('hidden');
   const [roomsContainerClass, setRoomsContainerClass] = useState('hidden');
   const [customizeContainerClass, setCustomizeContainerClass] = useState('hidden');
-  const [gameContainerClass, setGameContainerClass] = useState('shown');
+  const [gameContainerClass, setGameContainerClass] = useState('hidden');
   const [loginAccess, setLoginAccess] = useState({
     promptInfo: 'prompt-info hide',
     buttonLoginClass: 'hidden',
@@ -27,76 +29,21 @@ function App() {
     buttonLoginDisabled: 'disabled',
     loginValid: false
   });
-  const [playingRooms, setPlayingRooms] = useState([{
-    playingRoomId: 0,
-    stateClass: 'waiting',
-    stateName: 'Oczekuje na graczy',
-    maxPlayers: 4,
-    chairs: [{
-      chairId: 0,
-      playerId: 1
-    },
-    {
-      chairId: 1,
-      playerId: 0
-    },
-    {
-      chairId: 2,
-      playerId: 'not-assigned'
-    },
-    {
-      chairId: 3,
-      playerId: 'not-available'
-    }],
-    players: [
-      {
-        playerId: 0,
-        loginName: 'one'
-      },
-      {
-        playerId: 1,
-        loginName: 'two'
-      },
-      {
-        playerId: 2,
-        loginName: 'three'
-      }],
-    durationTime: 621,
-    lowestCard: 6
-  },
-  {
-    playingRoomId: 1,
-    stateClass: 'ready',
-    stateName: 'Gotowa do otwarcia',
-    maxPlayers: 0,
-    chairs: [{
-      chairId: 0,
-      playerId: 'not-assigned'
-    },
-    {
-      chairId: 1,
-      playerId: 'not-assigned'
-    },
-    {
-      chairId: 2,
-      playerId: 'not-assigned'
-    },
-    {
-      chairId: 3,
-      playerId: 'not-assigned'
-    }],
-    players: [
-    ],
-    durationTime: 0,
-    lowestCard: 0
-  }]);
+  const [playingRooms, setPlayingRooms] = useState([]);
   const [playersElapsedTime, setPlayersElapsedTime] = useState([
     [600, 400, 400], []
   ]);
   useEffect(() => {
-    const socket = socketIoClient();
-    socket.on('login', data => {
-      console.log(data);
+    socket.on('playing-rooms', (data) => {
+      setPlayingRooms(data.playingRooms);
+    });
+    socket.on('join-room', (data) => {
+      setOwnPlayerId(data.playerId);
+    });
+    socket.on('chat-message', (data) => {
+      let temp = chatBox;
+      temp.push(data);
+      setChatBox([...temp]);
     });
     setTimeout(function() {
       setLoginContainerClass('showing');
@@ -131,6 +78,7 @@ function App() {
   }
   function loginUser() {
     if (loginAccess.loginValid === true) {
+      socket.emit('login-user', {loginName: ownLoginName});
       setLoginContainerClass('hiding');
       setTimeout(function() {
         setLoginContainerClass('hidden');
@@ -141,7 +89,8 @@ function App() {
     }
   }
   function sendChatMessage() {
-    alert('ok');
+    socket.emit('chat-message', ownChatMessage);
+    setOwnChatMessage('');
   }
   function inputKeyPressToLogin(event) {
     if(event.key === 'Enter'){
@@ -172,21 +121,41 @@ function App() {
       document.getElementById('login-name').focus();
     }, 4000);
   }
-  function selectRoom(playingRoomId, stateClass) {
-    setOwnPlayingRoomId(playingRoomId);
-    setRoomsContainerClass('hiding');
-    setTimeout(function() {
-      setRoomsContainerClass('hidden');
-    }, 2000);
+  function chooseRoom(playingRoomId, stateClass) {
     if (stateClass === 'playing') {
       alert('Nie możesz wejść do tego pokoju ponieważ aktualnie jest on zajęty przez innych graczy i toczy się w nim rozgrywka!')
+    } else if (stateClass === 'waiting') {
+      socket.emit('join-room', {playingRoomId: playingRoomId, loginName: ownLoginName});
+      setOwnPlayingRoomId(playingRoomId);
+      setRoomsContainerClass('hiding');
+      setTimeout(function() {
+        setRoomsContainerClass('hidden');
+      }, 2000);
+      setTimeout(function() {
+        setGameContainerClass('showing');
+      }, 4000);
     } else if (stateClass === 'ready') {
+      setOwnPlayingRoomId(playingRoomId);
+      setRoomsContainerClass('hiding');
+      setTimeout(function() {
+        setRoomsContainerClass('hidden');
+      }, 2000);
       setTimeout(function() {
         setCustomizeContainerClass('showing');
       }, 4000);
     }
   }
-  function returnToSelectRoom() {
+  function openRoom() {
+    socket.emit('create-room', {playingRoomId: ownPlayingRoomId, loginName: ownLoginName, roomMaxPlayers: ownRoomMaxPlayers, roomDurationTimeMins: ownRoomDurationTimeMins, roomDurationTimeSecs: ownRoomDurationTimeSecs, roomLowestCard: ownRoomLowestCard});
+    setCustomizeContainerClass('hiding');
+    setTimeout(function() {
+      setCustomizeContainerClass('hidden');
+    }, 2000);
+    setTimeout(function() {
+      setGameContainerClass('showing');
+    }, 4000);
+  }
+  function returnToChooseRoom() {
     setCustomizeContainerClass('hiding');
     setTimeout(function() {
       setCustomizeContainerClass('hidden');
@@ -223,7 +192,7 @@ function App() {
         <p>Wybierz pokój do gry:</p>
         <div>
           {playingRooms.map(item =>
-            <div key={item.playingRoomId} className={item.stateClass} onClick={e => selectRoom(item.playingRoomId, item.stateClass)}>
+            <div key={item.playingRoomId} className={item.stateClass} onClick={e => chooseRoom(item.playingRoomId, item.stateClass)}>
               <small data-room-id={(item.playingRoomId + 1)}></small>
               <div>
                 <div>{(item.playingRoomId + 1)}</div>
@@ -275,8 +244,8 @@ function App() {
               </div>
             </div>
             <hr />
-            <button type="button">Otwórz nowy pokój!</button>
-            <button type="button" onClick={returnToSelectRoom}>Przejdź do poprzedniej strony!</button>
+            <button type="button" onClick={openRoom}>Otwórz nowy pokój!</button>
+            <button type="button" onClick={returnToChooseRoom}>Przejdź do poprzedniej strony!</button>
           </div>
         </div>
       </div>
@@ -285,12 +254,12 @@ function App() {
           <div id="table">Stół</div>
           <div id="aside">
             <div id="chairs">
-            {playingRooms[ownPlayingRoomId].chairs.map((item, index) =>
+            {(typeof playingRooms[ownPlayingRoomId] !=='undefined') ? playingRooms[ownPlayingRoomId].chairs.map((item, index) =>
               <div className="chair">
                 <div>Krzesło {(item.chairId + 1)}</div>
                 <div>{(item.playerId !== 'not-available') ? ((item.playerId !== 'not-assigned') ? <span className="chair-busy">{playingRooms[ownPlayingRoomId].players[index].loginName}</span> : <button type="button">Usiądź</button>) : <span className="chair-not-available">Niedostępne</span>}</div>
-              </div>
-            )}
+              </div>) : null
+            }
             </div>
             <div id="actions">
               <div className="actions">
@@ -306,7 +275,7 @@ function App() {
               <div className="chat">
                 <div>Czat grupowy</div>
                 <div>
-                  <div>Witaj!</div>
+                  <div>{chatBox.map(item => <div>{item}</div>)}</div>
                   <div><input type="text" id="chat-message" name="chat-message" autoComplete="off" size="1" maxLength="100" value={ownChatMessage} onChange={e => updateChatMessage(e.target.value)} onKeyPress={inputKeyPressToSendChatMessage} /><button type="button" onClick={sendChatMessage} disabled={buttonSendChatMessageDisabled}>Wyślij</button></div>
                 </div>
               </div>

@@ -18,13 +18,14 @@ html, body {
   padding: 0;
   width: 100vw;
   height: 100vh;
-  font-size: 10vmin;
+  font-size: 9vmin;
   font-family: 'Merriweather', sans-serif;
   color: white;
 }
 
 body {
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   background: linear-gradient(90deg, rgb(20, 25, 40), rgb(40, 45, 60));
   background-size: 400% 400%;
   -webkit-touch-callout: none;
