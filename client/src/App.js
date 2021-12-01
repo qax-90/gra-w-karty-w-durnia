@@ -9,6 +9,7 @@ const socket = socketIoClient.connect(ENDPOINT);
 function App() {
   const [ownLoginName, setOwnLoginName] = useState('');
   const [ownPlayerId, setOwnPlayerId] = useState(null);
+  const [ownChairId, setOwnChairId] = useState(null);
   const [ownPlayingRoomId, setOwnPlayingRoomId] = useState(null);
   const [ownRoomMaxPlayers, setOwnRoomMaxPlayers] = useState(2);
   const [ownRoomDurationTimeMins, setOwnRoomDurationTimeMins] = useState(5);
@@ -172,6 +173,9 @@ function App() {
       setRoomsContainerClass('showing');
     }, 4000);
   }
+  function sitDown(chairId) {
+    socket.emit('sit-down', {chairId: chairId, playingRoomId: ownPlayingRoomId});
+  }
   return (
     <div className="App">
       <p className="copyright-text"></p>
@@ -263,9 +267,9 @@ function App() {
           <div id="aside">
             <div id="chairs">
             {(typeof playingRooms[ownPlayingRoomId] !=='undefined') ? playingRooms[ownPlayingRoomId].chairs.map((item, index) =>
-              <div className="chair">
+              <div key={'chair-' + item.chairId} className="chair">
                 <div>Krzesło {(item.chairId + 1)}</div>
-                <div>{(item.playerId !== 'not-available') ? ((item.playerId !== 'not-assigned') ? <span className="chair-busy">{playingRooms[ownPlayingRoomId].players[index].loginName}</span> : <button type="button">Usiądź</button>) : <span className="chair-not-available">Niedostępne</span>}</div>
+                <div>{(item.playerId !== 'not-available') ? ((item.playerId !== 'not-assigned') ? <span className="chair-busy">{playingRooms[ownPlayingRoomId].players.find(player => player.playerId === item.playerId).loginName}</span> : <button id={item.chairId} type="button" onClick={e => sitDown(e.target.id)}>Usiądź</button>) : <span className="chair-not-available">Niedostępne</span>}</div>
               </div>) : null
             }
             </div>
