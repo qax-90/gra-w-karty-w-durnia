@@ -45,7 +45,8 @@ div#login-container {
   text-align: center;
 }
 
-div#rooms-container, div#customize-container {
+div#rooms-container,
+div#customize-container {
   position: absolute;
   width: 100%;
   left: 50%;
@@ -72,24 +73,37 @@ div#game-container {
   transform: translate(-50%, -50%);
 }
 
-div#login-container.hidden, div#rules-container.hidden, div#rooms-container.hidden, div#customize-container.hidden, div#game-container.hidden {
+div#login-container.hidden,
+div#rules-container.hidden,
+div#rooms-container.hidden,
+div#customize-container.hidden,
+div#game-container.hidden {
   display: none;
 }
 
-div#login-container.showing, div#rules-container.showing, div#rooms-container.showing, div#customize-container.showing, div#game-container.showing {
+div#login-container.showing,
+div#rules-container.showing,
+div#rooms-container.showing,
+div#customize-container.showing,
+div#game-container.showing {
   display: block;
   animation-duration: 5s;
   animation-fill-mode: forwards;
   animation-name: showing-container;
 }
 
-div#login-container.hiding, div#rules-container.hiding, div#rooms-container.hiding, div#customize-container.hiding, div#game-container.hiding {
+div#login-container.hiding,
+div#rules-container.hiding,
+div#rooms-container.hiding,
+div#customize-container.hiding,
+div#game-container.hiding {
   animation-duration: 2s;
   animation-fill-mode: forwards;
   animation-name: hiding-container;
 }
 
-div#rooms-container > div, div#customize-container > div {
+div#rooms-container > div,
+div#customize-container > div {
   display: inline-block;
 }
 
@@ -137,7 +151,8 @@ div#rooms-container > div > div.waiting:hover {
   cursor: pointer;
 }
 
-div#rooms-container > div > div.playing:hover {
+div#rooms-container > div > div.playing:hover,
+div#rooms-container > div > div.preparing:hover {
   background-color: rgb(50, 58, 72);
   cursor: not-allowed;
 }
@@ -164,7 +179,8 @@ div#rooms-container > div > div > div > div:first-of-type {
   transition-duration: 1s;
 }
 
-div#rooms-container > div > div > small, div#customize-container > div > div > big {
+div#rooms-container > div > div > small,
+div#customize-container > div > div > big {
   display: block;
   margin-bottom: 0.2rem;
   text-align: center;
@@ -217,7 +233,10 @@ div#customize-container > div > div > div > div > span.secs-label {
   margin-left: 0.15rem;
 }
 
-div#login-container > p, div#rules-container > p, div#rooms-container > p, div#customize-container > p {
+div#login-container > p,
+div#rules-container > p,
+div#rooms-container > p,
+div#customize-container > p {
   font-size: 0.6rem;
   margin: 0.4rem auto 0.2rem auto;
 }
@@ -243,7 +262,8 @@ div#rooms-container > div > div.waiting:hover > div > div:first-of-type {
   background-color: rgb(179, 179, 9);
 }
 
-div#rooms-container > div > div.playing:hover > div > div:first-of-type {
+div#rooms-container > div > div.playing:hover > div > div:first-of-type,
+div#rooms-container > div > div.preparing:hover > div > div:first-of-type {
   background-color: rgb(191, 50, 11);
 }
 
@@ -255,12 +275,17 @@ div#rooms-container > div > div.waiting:hover > small {
   color: rgb(179, 179, 9);
 }
 
-div#rooms-container > div > div.playing:hover > small {
+div#rooms-container > div > div.playing:hover > small,
+div#rooms-container > div > div.preparing:hover > small {
   color: rgb(191, 50, 11);
 }
 
 div#rooms-container > div > div.ready:hover > small::before {
   content: 'Możesz stworzyć nowy pokój do gry';
+}
+
+div#rooms-container > div > div.preparing:hover > small::before {
+  content: 'Nie możesz wejść do przygotowywanego pokoju';
 }
 
 div#rooms-container > div > div.waiting:hover > small::before {
@@ -305,7 +330,8 @@ hr {
   margin: 0.4rem auto 0.35rem auto;
 }
 
-div#login-container button, div#rules-container button {
+div#login-container button,
+div#rules-container button {
   margin: 0.6rem auto;
 }
 

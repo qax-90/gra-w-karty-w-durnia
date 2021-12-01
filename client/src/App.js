@@ -8,8 +8,8 @@ const socket = socketIoClient.connect(ENDPOINT);
 
 function App() {
   const [ownLoginName, setOwnLoginName] = useState('');
-  const [ownPlayerId, setOwnPlayerId] = useState();
-  const [ownPlayingRoomId, setOwnPlayingRoomId] = useState();
+  const [ownPlayerId, setOwnPlayerId] = useState(null);
+  const [ownPlayingRoomId, setOwnPlayingRoomId] = useState(null);
   const [ownRoomMaxPlayers, setOwnRoomMaxPlayers] = useState(2);
   const [ownRoomDurationTimeMins, setOwnRoomDurationTimeMins] = useState(5);
   const [ownRoomDurationTimeSecs, setOwnRoomDurationTimeSecs] = useState(0);
@@ -125,25 +125,32 @@ function App() {
   function chooseRoom(playingRoomId, stateClass) {
     if (stateClass === 'playing') {
       alert('Nie możesz wejść do tego pokoju ponieważ aktualnie jest on zajęty przez innych graczy i toczy się w nim rozgrywka!')
+    } else if (stateClass === 'preparing') {
+      alert('Nie możesz narazie wejść do tego pokoju ponieważ jest on dopiero przygotowywany!')
     } else if (stateClass === 'waiting') {
-      socket.emit('join-room', {playingRoomId: playingRoomId, loginName: ownLoginName});
-      setOwnPlayingRoomId(playingRoomId);
-      setRoomsContainerClass('hiding');
-      setTimeout(function() {
-        setRoomsContainerClass('hidden');
-      }, 2000);
-      setTimeout(function() {
-        setGameContainerClass('showing');
-      }, 4000);
+      if (ownPlayingRoomId === null) {
+        setOwnPlayingRoomId(playingRoomId);
+        socket.emit('join-room', {playingRoomId: playingRoomId, loginName: ownLoginName});
+        setRoomsContainerClass('hiding');
+        setTimeout(function() {
+          setRoomsContainerClass('hidden');
+        }, 2000);
+        setTimeout(function() {
+          setGameContainerClass('showing');
+        }, 4000);
+      }
     } else if (stateClass === 'ready') {
-      setOwnPlayingRoomId(playingRoomId);
-      setRoomsContainerClass('hiding');
-      setTimeout(function() {
-        setRoomsContainerClass('hidden');
-      }, 2000);
-      setTimeout(function() {
-        setCustomizeContainerClass('showing');
-      }, 4000);
+      if (ownPlayingRoomId === null) {
+        setOwnPlayingRoomId(playingRoomId);
+        socket.emit('prepare-room', {playingRoomId: playingRoomId, loginName: ownLoginName});
+        setRoomsContainerClass('hiding');
+        setTimeout(function() {
+          setRoomsContainerClass('hidden');
+        }, 2000);
+        setTimeout(function() {
+          setCustomizeContainerClass('showing');
+        }, 4000);
+      }
     }
   }
   function openRoom() {
@@ -199,10 +206,10 @@ function App() {
                 <div>{(item.playingRoomId + 1)}</div>
                 <div>
                   <span>Stan: {item.stateName}</span>
-                  <span>Gracze: {((item.stateClass !== 'ready') ? item.players.map(subitem => <span key={subitem.playerId} className="players-text">{subitem.loginName}</span>) : 'żadnych')}</span>
-                  <span>Oczekiwana ilość graczy: {((item.stateClass !== 'ready') ? item.maxPlayers : 'nieustalona')}</span>
-                  <span>Czas dla gracza: {((item.stateClass !== 'ready') ? (Math.floor(item.durationTime / 60) + ' min. ' + ((item.durationTime % 60) >= 10 ? (Math.floor(item.durationTime % 60)) : ('0' + Math.floor(item.durationTime % 60))) + ' sek.') : 'nieokreślony')}</span>
-                  <span>Najniższa karta w talii: {((item.stateClass !== 'ready') ? item.lowestCard : 'nieokreślona')}</span>
+                  <span>Gracze: {((item.stateClass !== 'ready' || item.stateClass !== 'preparing') ? item.players.map(subitem => <span key={subitem.playerId} className="players-text">{subitem.loginName}</span>) : 'żadnych')}</span>
+                  <span>Oczekiwana ilość graczy: {((item.stateClass !== 'ready' || item.stateClass !== 'preparing') ? item.maxPlayers : 'nieustalona')}</span>
+                  <span>Czas dla gracza: {((item.stateClass !== 'ready' || item.stateClass !== 'preparing') ? (Math.floor(item.durationTime / 60) + ' min. ' + ((item.durationTime % 60) >= 10 ? (Math.floor(item.durationTime % 60)) : ('0' + Math.floor(item.durationTime % 60))) + ' sek.') : 'nieokreślony')}</span>
+                  <span>Najniższa karta w talii: {((item.stateClass !== 'ready' || item.stateClass !== 'preparing') ? item.lowestCard : 'nieokreślona')}</span>
                 </div>
               </div>
             </div>)}

@@ -111,6 +111,14 @@ io.on('connection', (socket) => {
 		console.log(currentTime(new Date(time)) + ' - Klient o ID gniazda ' + socket.id + ' wybrał login ' + loginName);
 		socket.emit('playing-rooms', {playingRooms: playingRooms});
 	});
+	socket.on('prepare-room', (data) => {
+		let playingRoomId = data.playingRoomId;
+		let loginName = data.loginName;
+		playingRooms[playingRoomId].stateClass = 'preparing';
+		playingRooms[playingRoomId].stateName = 'W trakcie przygotowania';
+		io.emit('playing-rooms', {playingRooms: playingRooms});
+		console.log(currentTime(new Date(time)) + ' - Klient o nazwie użytkownika ' + loginName + ' przygotowuje nowy pokój o ID ' + playingRoomId);
+	});
 	socket.on('join-room', (data) => {
 		let socketId = socket.id;
 		let playingRoomId = data.playingRoomId;
