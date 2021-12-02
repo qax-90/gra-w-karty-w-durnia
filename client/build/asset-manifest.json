@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/static/css/main.813602fb.chunk.css",
-    "main.js": "/static/js/main.df8a9e41.chunk.js",
-    "main.js.map": "/static/js/main.df8a9e41.chunk.js.map",
+    "main.css": "/static/css/main.3396dac5.chunk.css",
+    "main.js": "/static/js/main.e24a36c4.chunk.js",
+    "main.js.map": "/static/js/main.e24a36c4.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.059857bc.js",
     "runtime-main.js.map": "/static/js/runtime-main.059857bc.js.map",
     "static/js/2.6163efc6.chunk.js": "/static/js/2.6163efc6.chunk.js",
@@ -10,14 +10,14 @@
     "static/js/3.5cbff4fc.chunk.js": "/static/js/3.5cbff4fc.chunk.js",
     "static/js/3.5cbff4fc.chunk.js.map": "/static/js/3.5cbff4fc.chunk.js.map",
     "index.html": "/index.html",
-    "static/css/main.813602fb.chunk.css.map": "/static/css/main.813602fb.chunk.css.map",
+    "static/css/main.3396dac5.chunk.css.map": "/static/css/main.3396dac5.chunk.css.map",
     "static/js/2.6163efc6.chunk.js.LICENSE.txt": "/static/js/2.6163efc6.chunk.js.LICENSE.txt",
     "static/media/App.css": "/static/media/Merriweather-Regular.7f357b83.eot"
   },
   "entrypoints": [
     "static/js/runtime-main.059857bc.js",
     "static/js/2.6163efc6.chunk.js",
-    "static/css/main.813602fb.chunk.css",
-    "static/js/main.df8a9e41.chunk.js"
+    "static/css/main.3396dac5.chunk.css",
+    "static/js/main.e24a36c4.chunk.js"
   ]
 }

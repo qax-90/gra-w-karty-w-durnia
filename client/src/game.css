@@ -141,6 +141,10 @@ div#aside > div#chairs > div.chair > div:last-of-type > span.chair-busy {
   color: rgb(13, 202, 240);
 }
 
+div#aside > div#chairs > div.chair > div:last-of-type > span.chair-waiting {
+  color: rgb(179, 179, 9);
+}
+
 div#aside > div#chairs > div.chair > div:last-of-type > span.chair-not-available {
   color: rgb(220, 53, 69);
 }

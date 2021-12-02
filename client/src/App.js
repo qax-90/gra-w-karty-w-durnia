@@ -174,6 +174,7 @@ function App() {
     }, 4000);
   }
   function sitDown(chairId) {
+    setOwnChairId(chairId);
     socket.emit('sit-down', {chairId: chairId, playingRoomId: ownPlayingRoomId});
   }
   return (
@@ -210,10 +211,10 @@ function App() {
                 <div>{(item.playingRoomId + 1)}</div>
                 <div>
                   <span>Stan: {item.stateName}</span>
-                  <span>Gracze: {((item.stateClass !== 'ready' || item.stateClass !== 'preparing') ? item.players.map(subitem => <span key={subitem.playerId} className="players-text">{subitem.loginName}</span>) : 'żadnych')}</span>
-                  <span>Oczekiwana ilość graczy: {((item.stateClass !== 'ready' || item.stateClass !== 'preparing') ? item.maxPlayers : 'nieustalona')}</span>
-                  <span>Czas dla gracza: {((item.stateClass !== 'ready' || item.stateClass !== 'preparing') ? (Math.floor(item.durationTime / 60) + ' min. ' + ((item.durationTime % 60) >= 10 ? (Math.floor(item.durationTime % 60)) : ('0' + Math.floor(item.durationTime % 60))) + ' sek.') : 'nieokreślony')}</span>
-                  <span>Najniższa karta w talii: {((item.stateClass !== 'ready' || item.stateClass !== 'preparing') ? item.lowestCard : 'nieokreślona')}</span>
+                  <span>Gracze: {((item.stateClass !== 'ready' && item.stateClass !== 'preparing') ? item.players.map(subitem => <span key={subitem.playerId} className="players-text">{subitem.loginName}</span>) : 'żadnych')}</span>
+                  <span>Oczekiwana ilość graczy: {((item.stateClass !== 'ready' && item.stateClass !== 'preparing') ? item.maxPlayers : 'nieustalona')}</span>
+                  <span>Czas dla gracza: {((item.stateClass !== 'ready' && item.stateClass !== 'preparing') ? (Math.floor(item.durationTime / 60) + ' min. ' + ((item.durationTime % 60) >= 10 ? (Math.floor(item.durationTime % 60)) : ('0' + Math.floor(item.durationTime % 60))) + ' sek.') : 'nieokreślony')}</span>
+                  <span>Najniższa karta w talii: {((item.stateClass !== 'ready' && item.stateClass !== 'preparing') ? item.lowestCard : 'nieokreślona')}</span>
                 </div>
               </div>
             </div>)}
@@ -269,7 +270,7 @@ function App() {
             {(typeof playingRooms[ownPlayingRoomId] !=='undefined') ? playingRooms[ownPlayingRoomId].chairs.map((item, index) =>
               <div key={'chair-' + item.chairId} className="chair">
                 <div>Krzesło {(item.chairId + 1)}</div>
-                <div>{(item.playerId !== 'not-available') ? ((item.playerId !== 'not-assigned') ? <span className="chair-busy">{playingRooms[ownPlayingRoomId].players.find(player => player.playerId === item.playerId).loginName}</span> : <button id={item.chairId} type="button" onClick={e => sitDown(e.target.id)}>Usiądź</button>) : <span className="chair-not-available">Niedostępne</span>}</div>
+                <div>{(item.playerId === 'not-available') ? <span className="chair-not-available">Niedostępne</span> : ((item.playerId === 'not-assigned' && ownChairId === null) ? <button type="button" onClick={e => sitDown(item.chairId)}>Usiądź</button> : ((item.playerId === 'not-assigned' && ownChairId !== null) ? <span className="chair-waiting">Oczekuje</span> : <span className="chair-busy">{playingRooms[ownPlayingRoomId].players.find(player => player.playerId === item.playerId).loginName}</span>))}</div>
               </div>) : null
             }
             </div>
