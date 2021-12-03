@@ -224,6 +224,10 @@ div#customize-container > div > div > div > div > select {
   background-color: rgb(50, 55, 70);
 }
 
+div#customize-container > div > div > div > div > input[type="number"] {
+  width: 1.2rem;
+}
+
 div#customize-container > div > div > div > div > span.mins-label {
   margin-left: 0.15rem;
   margin-right: 0.25rem;

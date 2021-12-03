@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import socketIoClient from 'socket.io-client';
+import removeIcon from './remove-icon.svg';
 import './App.css';
 import './index.css';
 import './game.css';
@@ -23,6 +24,7 @@ function App() {
   const [roomsContainerClass, setRoomsContainerClass] = useState('hidden');
   const [customizeContainerClass, setCustomizeContainerClass] = useState('hidden');
   const [gameContainerClass, setGameContainerClass] = useState('hidden');
+  const [startGameAlertClass, setStartGameAlertClass] = useState('hidden');
   const [loginAccess, setLoginAccess] = useState({
     promptInfo: 'prompt-info hide',
     buttonLoginClass: 'hidden',
@@ -46,6 +48,9 @@ function App() {
       temp.push(data);
       setChatBox([...temp]);
       document.getElementById('chat-box').scrollTop = document.getElementById('chat-box').scrollHeight;
+    });
+    socket.on('start-game-alert', () => {
+      setStartGameAlertClass('shown');
     });
     setTimeout(function() {
       setLoginContainerClass('showing');
@@ -264,13 +269,15 @@ function App() {
       </div>
       <div id="game-container" className={gameContainerClass}>
         <div>
-          <div id="table">Stół</div>
+          <div id="table">
+            <div id="start-game-alert" className={startGameAlertClass}>{(ownPlayerId !== 0) ? 'Czekaj na potwierdzenie i\u00A0rozpoczęcie gry przez administratora' : 'Wszystkie krzesła zostały zajęte.\nCzy chcesz rozpocząć grę w\u00A0obecnym składzie?'}</div>
+          </div>
           <div id="aside">
             <div id="chairs">
             {(typeof playingRooms[ownPlayingRoomId] !=='undefined') ? playingRooms[ownPlayingRoomId].chairs.map((item, index) =>
               <div key={'chair-' + item.chairId} className="chair">
                 <div>Krzesło {(item.chairId + 1)}</div>
-                <div>{(item.playerId === 'not-available') ? <span className="chair-not-available">Niedostępne</span> : ((item.playerId === 'not-assigned' && ownChairId === null) ? <button type="button" onClick={e => sitDown(item.chairId)}>Usiądź</button> : ((item.playerId === 'not-assigned' && ownChairId !== null) ? <span className="chair-waiting">Oczekuje</span> : <span className="chair-busy">{playingRooms[ownPlayingRoomId].players.find(player => player.playerId === item.playerId).loginName}</span>))}</div>
+                <div>{(item.playerId === 'not-available') ? <span className="chair-not-available">Niedostępne</span> : ((item.playerId === 'not-assigned' && ownChairId === null) ? <button type="button" onClick={e => sitDown(item.chairId)}>Usiądź</button> : ((item.playerId === 'not-assigned' && ownChairId !== null) ? <span className="chair-waiting">Oczekuje</span> : <span className="chair-busy">{playingRooms[ownPlayingRoomId].players.find(player => player.playerId === item.playerId).loginName}{(ownPlayerId === 0) ? <img class="remove-icon" src={removeIcon} alt="Przycisk do wyproszenia gracza" title="Wyproś tego gracza z pokoju" /> : null}</span>))}</div>
               </div>) : null
             }
             </div>

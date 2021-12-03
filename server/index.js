@@ -34,11 +34,11 @@ var playingRooms = [{
 	playingRoomId: 1,
 	stateClass: 'ready',
 	stateName: 'Gotowa do otwarcia',
-	maxPlayers: 0,
+	maxPlayers: null,
 	chairs: [],
 	players: [],
-	durationTime: 0,
-	lowestCard: 0
+	durationTime: null,
+	lowestCard: null
 }];
 
 function currentTime(time, showMilisecs = true) {
@@ -142,6 +142,9 @@ io.on('connection', (socket) => {
 		playingRooms[playingRoomId].chairs.find(chair => chair.chairId === chairId).playerId = playerId;
 		io.emit('playing-rooms', {playingRooms: playingRooms});
 		console.log(currentTime(new Date(time)) + ' - Klient o nazwie użytkownika ' + loginName + ' usiadł na krześle numer ' + (chairId + 1) + ' w pokoju nr ' + (playingRoomId + 1));
+		if (playingRooms[playingRoomId].chairs.filter(chair => chair.playerId === 'not-assigned').length === 0) {
+			io.emit('start-game-alert');
+		}
 	});
 	socket.on('chat-message', (data) => {
 		time = Date.now();
