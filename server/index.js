@@ -154,4 +154,11 @@ io.on('connection', (socket) => {
 		let loginName = playingRooms[playingRoomId].players.find(player => player.socketId === socket.id).loginName.toString();
 		io.in(playingRoomId).emit('chat-message', {message: message, addTime: addTime, loginName: loginName});
 	});
+	socket.on('start-game', (data) => {
+		let playingRoomId = parseInt(data.playingRoomId);
+		let playerId = parseInt(playingRooms[playingRoomId].players.find(player => player.socketId === socket.id).playerId);
+		let loginName = playingRooms[playingRoomId].players.find(player => player.socketId === socket.id).loginName.toString();
+		io.emit('start-game');
+		console.log(currentTime(new Date(time)) + ' - Klient o nazwie użytkownika ' + loginName + ' rozpoczął grę w pokoju nr ' + (playingRoomId + 1));
+	});
 });

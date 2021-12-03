@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import socketIoClient from 'socket.io-client';
 import removeIcon from './remove-icon.svg';
+import cards from './cards'
 import './App.css';
 import './index.css';
 import './game.css';
@@ -51,6 +52,9 @@ function App() {
     });
     socket.on('start-game-alert', () => {
       setStartGameAlertClass('shown');
+    });
+    socket.on('start-game', () => {
+      setStartGameAlertClass('hidden');
     });
     setTimeout(function() {
       setLoginContainerClass('showing');
@@ -132,7 +136,7 @@ function App() {
     if (stateClass === 'playing') {
       alert('Nie możesz wejść do tego pokoju ponieważ aktualnie jest on zajęty przez innych graczy i toczy się w nim rozgrywka!')
     } else if (stateClass === 'preparing') {
-      alert('Nie możesz narazie wejść do tego pokoju ponieważ jest on dopiero przygotowywany!')
+      alert('Nie możesz narazie wejść do tego pokoju ponieważ jest on w trakcie przygotowywania!')
     } else if (stateClass === 'waiting') {
       if (ownPlayingRoomId === null) {
         setOwnPlayingRoomId(playingRoomId);
@@ -181,6 +185,9 @@ function App() {
   function sitDown(chairId) {
     setOwnChairId(chairId);
     socket.emit('sit-down', {chairId: chairId, playingRoomId: ownPlayingRoomId});
+  }
+  function startGame() {
+    socket.emit('start-game', {playingRoomId: ownPlayingRoomId});
   }
   return (
     <div className="App">
@@ -270,7 +277,17 @@ function App() {
       <div id="game-container" className={gameContainerClass}>
         <div>
           <div id="table">
-            <div id="start-game-alert" className={startGameAlertClass}>{(ownPlayerId !== 0) ? 'Czekaj na potwierdzenie i\u00A0rozpoczęcie gry przez administratora' : 'Wszystkie krzesła zostały zajęte.\nCzy chcesz rozpocząć grę w\u00A0obecnym składzie?'}</div>
+            <div id="start-game-alert" className={startGameAlertClass}>{(ownPlayerId !== 0) ? 'Czekaj na potwierdzenie i\u00A0rozpoczęcie gry przez administratora' : 'Wszystkie krzesła zostały zajęte.\nCzy chcesz rozpocząć grę w\u00A0obecnym składzie?'}{(ownPlayerId === 0) ? <button type="button" onClick={startGame}>Tak, rozpocznijmy grę!</button> : null}</div>
+            <div id="player-top" class="cards-containers">
+              <img src={cards[0][0].src} title={cards[0][0].title} />
+              <img src={cards[0][0].src} title={cards[0][0].title} />
+              <img src={cards[0][0].src} title={cards[0][0].title} />
+            </div>
+            <div id="player-bottom" class="cards-containers">
+              <img src={cards[1][5].src} title={cards[1][5].title} />
+              <img src={cards[3][3].src} title={cards[3][3].title} />
+              <img src={cards[2][12].src} title={cards[2][12].title} />
+            </div>
           </div>
           <div id="aside">
             <div id="chairs">
