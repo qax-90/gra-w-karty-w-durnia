@@ -179,25 +179,109 @@ div#start-game-alert button {
   margin: 0.3rem auto 0 auto;
 }
 
-div#game-container > div > div#table > div.cards-containers {
-  display: flex;
-  position: absolute;
-
-}
-
+div#game-container > div > div#table > div#player-bottom,
 div#game-container > div > div#table > div#player-top {
-  left: 50%;
-  top: 0.5rem;
-  transform: translateX(-50%);
+  position: absolute;
+  overflow: hidden;
+  z-index: 100;
+  padding-left: 2.8rem;
+  left: 0;
+  width: calc(100% - 2.8rem);
 }
 
-div#game-container > div > div#table > div#player-bottom {
-  left: 50%;
-  bottom: 0.5rem;
-  transform: translateX(-50%);
+div#game-container > div > div#table > div#player-bottom.shown {
+  display: block;
+  height: 2.5rem;
+  bottom: 0.4rem;
 }
 
-div#game-container > div > div#table > div.cards-containers img {
-  width: 1.3rem;
-  margin: 0 -0.5rem;
+div#game-container > div > div#table > div#player-top.shown {
+  display: block;
+  top: 0.4rem;
+  height: 2rem;
+}
+
+div#game-container > div > div#table > div#player-left.shown {
+  display: block;
+  left: 0.4rem;
+}
+
+div#game-container > div > div#table > div#player-right.shown {
+  display: block;
+  right: 0.4rem;
+}
+
+div#game-container > div > div#table > div#player-bottom.hidden {
+  display: none;
+}
+
+div#game-container > div > div#table > div#player-top.hidden {
+  display: none;
+}
+
+div#game-container > div > div#table > div#player-left.hidden {
+  display: none;
+}
+
+div#game-container > div > div#table > div#player-right.hidden {
+  display: none;
+}
+
+div#game-container > div > div#table > div#player-left,
+div#game-container > div > div#table > div#player-right {
+  position: absolute;
+  overflow: hidden;
+  padding-top: 0.82rem;
+  top: 0;
+  width: 2rem;
+  height: calc(100% - 0.82rem);
+}
+
+div#game-container > div > div#table > div#player-bottom > div.players-status,
+div#game-container > div > div#table > div#player-top > div.players-status {
+  display: flex;
+  align-items: center;
+  float: left;
+  text-align: center;
+  height: 100%;
+  margin-right: 0.4rem;
+  font-size: 0.27rem;
+}
+
+div#game-container > div > div#table > div#player-left > div.players-status,
+div#game-container > div > div#table > div#player-right > div.players-status {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 0.55rem;
+  font-size: 0.27rem;
+}
+
+div#game-container > div > div#table > div#player-left > div.players-status {
+  transform: rotate(270deg);
+}
+
+div#game-container > div > div#table > div#player-right > div.players-status {
+  transform: rotate(90deg);
+}
+
+div#game-container > div > div#table > div > div.players-cards-deck  {
+  position: relative;
+  height: 100%;
+}
+
+div#game-container > div > div#table > div#player-bottom > div.players-cards-deck > img,
+div#game-container > div > div#table > div#player-top > div.players-cards-deck > img {
+  position: absolute;
+  top: 0;
+  height: 100%;
+}
+
+div#game-container > div > div#table > div#player-left > div.players-cards-deck > img,
+div#game-container > div > div#table > div#player-right > div.players-cards-deck > img {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: calc(100% * 2 / 3);
 }

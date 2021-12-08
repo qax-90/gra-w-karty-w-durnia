@@ -9,10 +9,11 @@ const ENDPOINT = 'ws://127.0.0.1:3001';
 const socket = socketIoClient.connect(ENDPOINT);
 
 function App() {
-  const [ownLoginName, setOwnLoginName] = useState('');
-  const [ownPlayerId, setOwnPlayerId] = useState(null);
-  const [ownChairId, setOwnChairId] = useState(null);
-  const [ownPlayingRoomId, setOwnPlayingRoomId] = useState(null);
+  const [ownLoginName, setOwnLoginName] = useState('one');
+  const [ownPlayerId, setOwnPlayerId] = useState(2);
+  const [ownChairId, setOwnChairId] = useState(3);
+  const [ownPlayingRoomId, setOwnPlayingRoomId] = useState(0);
+  const [ownCardsDeck, setOwnCardsDeck] = useState([[2, 1], [1, 3], [8, 2], [6, 2], [4, 1], [12, 3], [2, 1]]);
   const [ownRoomMaxPlayers, setOwnRoomMaxPlayers] = useState(2);
   const [ownRoomDurationTimeMins, setOwnRoomDurationTimeMins] = useState(5);
   const [ownRoomDurationTimeSecs, setOwnRoomDurationTimeSecs] = useState(0);
@@ -24,8 +25,12 @@ function App() {
   const [rulesContainerClass, setRulesContainerClass] = useState('hidden');
   const [roomsContainerClass, setRoomsContainerClass] = useState('hidden');
   const [customizeContainerClass, setCustomizeContainerClass] = useState('hidden');
-  const [gameContainerClass, setGameContainerClass] = useState('hidden');
-  const [startGameAlertClass, setStartGameAlertClass] = useState('hidden');
+  const [gameContainerClass, setGameContainerClass] = useState('shown');
+  const [startGameAlertClass, setStartGameAlertClass] = useState('shown');
+  const [playerBottomClass, setPlayerBottomClass] = useState('hidden');
+  const [playerTopClass, setPlayerTopClass] = useState('hidden');
+  const [playerRightClass, setPlayerRightClass] = useState('hidden');
+  const [playerLeftClass, setPlayerLeftClass] = useState('hidden');
   const [loginAccess, setLoginAccess] = useState({
     promptInfo: 'prompt-info hide',
     buttonLoginClass: 'hidden',
@@ -33,9 +38,59 @@ function App() {
     buttonLoginDisabled: 'disabled',
     loginValid: false
   });
-  const [playingRooms, setPlayingRooms] = useState([]);
+  const [playersSides, setPlayersSides] = useState([]);
+  const [playingRooms, setPlayingRooms] = useState([{
+  	playingRoomId: 0,
+  	stateClass: 'waiting',
+  	stateName: 'Oczekuje na graczy',
+  	maxPlayers: 3,
+  	chairs: [
+      {chairId: 0, playerId: 3},
+      {chairId: 1, playerId: 1},
+      {chairId: 2, playerId: 0},
+      {chairId: 3, playerId: 2}
+    ],
+  	players: [
+  		{
+  			socketId: 9,
+  			playerId: 2,
+  			loginName: 'one',
+        cardsAmount: 5
+  		},
+  		{
+  			socketId: 3,
+  			playerId: 1,
+  			loginName: 'two',
+        cardsAmount: 6
+  		},
+      {
+        socketId: 5,
+        playerId: 0,
+        loginName: 'three',
+        cardsAmount: 8
+      },
+      {
+        socketId: 7,
+        playerId: 3,
+        loginName: 'four',
+        cardsAmount: 4
+      }],
+  	durationTime: 621,
+  	lowestCard: 6
+  }]);
   const [playersElapsedTime, setPlayersElapsedTime] = useState([
-    [600, 400, 400], []
+    {
+      playerId: 1, time: 400
+    },
+    {
+      playerId: 2, time: 600
+    },
+    {
+      playerId: 0, time: 500
+    },
+    {
+      playerId: 3, time: 800
+    }
   ]);
   useEffect(() => {
     socket.on('playing-rooms', (data) => {
@@ -55,11 +110,12 @@ function App() {
     });
     socket.on('start-game', () => {
       setStartGameAlertClass('hidden');
+      setOwnCardsDeck([[2, 1], [1, 3], [7, 2], [9, 1], [6, 0], [5, 2]]);
     });
-    setTimeout(function() {
+    /*setTimeout(function() {
       setLoginContainerClass('showing');
       document.getElementById('login-name').focus();
-    }, 26000);
+    }, 26000);*/
   }, []);
   function updateLoginName(loginName) {
     setOwnLoginName(loginName);
@@ -187,7 +243,87 @@ function App() {
     socket.emit('sit-down', {chairId: chairId, playingRoomId: ownPlayingRoomId});
   }
   function startGame() {
+    let currentPlayersSides = [];
+    let currentPlayerId;
+    let currentChairId = ownChairId;
+    let currentFreeChairs = playingRooms[ownPlayingRoomId].chairs.filter(chair => chair.playerId === 'not-available').length;
+    for (let loop = 0; loop < 4; loop++) {
+      currentPlayerId = playingRooms[ownPlayingRoomId].chairs.find(chair => chair.chairId === currentChairId).playerId;
+      if (currentPlayerId !== 'not-available') {
+        currentPlayersSides.push(currentPlayerId);
+      }
+      if (currentChairId === 3) {
+        currentChairId = 0;
+      } else {
+        currentChairId++;
+      }
+    }
+    if (currentFreeChairs === 0) {
+      setPlayersSides([
+        {sideId: 0, sideName: 'bottom', playerId: currentPlayersSides[0]},
+        {sideId: 1, sideName: 'left', playerId: currentPlayersSides[1]},
+        {sideId: 2, sideName: 'top', playerId: currentPlayersSides[2]},
+        {sideId: 3, sideName: 'right', playerId: currentPlayersSides[3]},
+      ]);
+      setPlayerBottomClass('shown');
+      setPlayerTopClass('shown');
+      setPlayerLeftClass('shown');
+      setPlayerRightClass('shown');
+    } else if (currentFreeChairs === 1) {
+      setPlayersSides([
+        {sideId: 0, sideName: 'bottom', playerId: currentPlayersSides[0]},
+        {sideId: 1, sideName: 'left', playerId: currentPlayersSides[1]},
+        {sideId: 2, sideName: 'top', playerId: 'none'},
+        {sideId: 3, sideName: 'right', playerId: currentPlayersSides[2]},
+      ]);
+      setPlayerBottomClass('shown');
+      setPlayerLeftClass('shown');
+      setPlayerRightClass('shown');
+    } else if (currentFreeChairs === 2) {
+      setPlayersSides([
+        {sideId: 0, sideName: 'bottom', playerId: currentPlayersSides[0]},
+        {sideId: 1, sideName: 'left', playerId: 'none'},
+        {sideId: 2, sideName: 'top', playerId: currentPlayersSides[1]},
+        {sideId: 3, sideName: 'right', playerId: 'none'},
+      ]);
+      setPlayerBottomClass('shown');
+      setPlayerTopClass('shown');
+    }
     socket.emit('start-game', {playingRoomId: ownPlayingRoomId});
+  }
+  function generateBottomCardDeck() {
+    let temp = [];
+    let amount = ownCardsDeck.length;
+    for (let loop = 0; loop < amount; loop++) {
+      let cardFigure =  ownCardsDeck[loop][0];
+      let cardColor = ownCardsDeck[loop][1];
+      temp.push(<img key={'bottom-card-' + loop} src={cards[cardFigure][cardColor].src} title={cards[cardFigure][cardColor].title} style={{ transform: 'translateX(' + (loop * 35) + '%)'}} />);
+    }
+    return temp;
+  }
+  function generateTopCardDeck() {
+    let temp = [];
+    let amount = (playerTopClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'top').playerId).cardsAmount : 0;
+    for (let loop = 0; loop < amount; loop++) {
+      temp.push(<img key={'top-card-' + loop} src={cards[0][0].src} title={cards[0][0].title} style={{ transform: 'translateX(' + (loop * 35) + '%)'}} />);
+    }
+    return temp;
+  }
+  function generateLeftCardDeck() {
+    let temp = [];
+    let amount = (playerLeftClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'left').playerId).cardsAmount : 0;
+    for (let loop = 0; loop < amount; loop++) {
+      temp.push(<img key={'left-card-' + loop} src={cards[0][0].src} title={cards[0][0].title} style={{ transform: 'translate(-50%, ' + (loop * 35 * 2 / 3) + '%) rotate(90deg)'}} />);
+    }
+    return temp;
+  }
+  function generateRightCardDeck() {
+    let temp = [];
+    let amount = (playerRightClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'right').playerId).cardsAmount : 0;
+    for (let loop = 0; loop < amount; loop++) {
+      temp.push(<img key={'right-card-' + loop} src={cards[0][0].src} title={cards[0][0].title} style={{ transform: 'translate(-50%, ' + (loop * 35 * 2 / 3) + '%) rotate(90deg)'}} />);
+    }
+    return temp;
   }
   return (
     <div className="App">
@@ -195,7 +331,7 @@ function App() {
       <p className="welcome-text"></p>
       <div id="login-container" className={loginContainerClass}>
         <p>Podaj swój login:</p>
-        <input type="text" id="login-name" name="login-name" maxLength="15" autoComplete="off" value={ownLoginName} onChange={e => updateLoginName(e.target.value)} onKeyPress={inputKeyPressToLogin} />
+        <input type="text" id="login-name" name="login-name" maxLength="5" autoComplete="off" value={ownLoginName} onChange={e => updateLoginName(e.target.value)} onKeyPress={inputKeyPressToLogin} />
         <button type="button" className={loginAccess.buttonLoginClass} onClick={loginUser} disabled={loginAccess.buttonLoginDisabled}>Zaloguj się!</button>
         <button type="button" className={loginAccess.buttonRulesClass} onClick={showRules}>Wyjaśnij mi zasady gry!</button>
         <p className={loginAccess.promptInfo}>Dopuszczalne są tylko litery od A do Z,<br />cyfry od 0 do 9 oraz znak minus!</p>
@@ -252,7 +388,7 @@ function App() {
               </div>
               <div>
                 <span>Całkowity czas dla gracza:</span>
-                <input type="number" id="duration-time-mins" name="duration-time-mins" value={ownRoomDurationTimeMins} min="1" max="60" step="1" onChange={e => setOwnRoomDurationTimeMins(e.target.value)} />
+                <input type="number" id="duration-time-mins" name="duration-time-mins" value={ownRoomDurationTimeMins} min="1" max="15" step="1" onChange={e => setOwnRoomDurationTimeMins(e.target.value)} />
                 <span className="mins-label">min.</span>
                 <input type="number" id="duration-time-secs" name="duration-time-secs" value={ownRoomDurationTimeSecs} min="0" max="59" step="1" onChange={e => setOwnRoomDurationTimeSecs(e.target.value)} />
                 <span className="secs-label">sek.</span>
@@ -277,16 +413,38 @@ function App() {
       <div id="game-container" className={gameContainerClass}>
         <div>
           <div id="table">
-            <div id="start-game-alert" className={startGameAlertClass}>{(ownPlayerId !== 0) ? 'Czekaj na potwierdzenie i\u00A0rozpoczęcie gry przez administratora' : 'Wszystkie krzesła zostały zajęte.\nCzy chcesz rozpocząć grę w\u00A0obecnym składzie?'}{(ownPlayerId === 0) ? <button type="button" onClick={startGame}>Tak, rozpocznijmy grę!</button> : null}</div>
-            <div id="player-top" class="cards-containers">
-              <img src={cards[0][0].src} title={cards[0][0].title} />
-              <img src={cards[0][0].src} title={cards[0][0].title} />
-              <img src={cards[0][0].src} title={cards[0][0].title} />
+            <div id="start-game-alert" onClick={startGame} className={startGameAlertClass}>{(ownPlayerId !== 0) ? 'Czekaj na potwierdzenie i\u00A0rozpoczęcie gry przez administratora' : 'Wszystkie krzesła zostały zajęte.\nCzy chcesz rozpocząć grę w\u00A0obecnym składzie?'}{(ownPlayerId === 0) ? <button type="button" onClick={startGame}>Tak, rozpocznijmy grę!</button> : null}</div>
+            <div id="player-bottom" className={playerBottomClass}>
+              <div className="players-status">
+                <div>Gracz: {(playerBottomClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'bottom').playerId).loginName : null}<br />Czas: {(playerBottomClass === 'shown') ? playersElapsedTime.find(player => player.playerId === playersSides.find(player => player.sideName === 'bottom').playerId).time : null} sek.<br />Ilość kart: {(playerBottomClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'bottom').playerId).cardsAmount : null}</div>
+              </div>
+              <div className="players-cards-deck">
+                {generateBottomCardDeck()}
+              </div>
             </div>
-            <div id="player-bottom" class="cards-containers">
-              <img src={cards[1][5].src} title={cards[1][5].title} />
-              <img src={cards[3][3].src} title={cards[3][3].title} />
-              <img src={cards[2][12].src} title={cards[2][12].title} />
+            <div id="player-left" className={playerLeftClass}>
+            <div className="players-status">
+              <div>Gracz: {(playerLeftClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'left').playerId).loginName : null}<br />Czas: {(playerLeftClass === 'shown') ? playersElapsedTime.find(player => player.playerId === playersSides.find(player => player.sideName === 'left').playerId).time : null} sek.<br />Ilość kart: {(playerLeftClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'left').playerId).cardsAmount : null}</div>
+            </div>
+              <div className="players-cards-deck">
+                {generateLeftCardDeck()}
+              </div>
+            </div>
+            <div id="player-top" className={playerTopClass}>
+            <div className="players-status">
+              <div>Gracz: {(playerTopClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'top').playerId).loginName : null}<br />Czas: {(playerTopClass === 'shown') ? playersElapsedTime.find(player => player.playerId === playersSides.find(player => player.sideName === 'top').playerId).time : null} sek.<br />Ilość kart: {(playerTopClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'top').playerId).cardsAmount : null}</div>
+            </div>
+              <div className="players-cards-deck">
+                {generateTopCardDeck()}
+              </div>
+            </div>
+            <div id="player-right" className={playerRightClass}>
+            <div className="players-status">
+              <div>Gracz: {(playerRightClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'right').playerId).loginName : null}<br />Czas: {(playerRightClass === 'shown') ? playersElapsedTime.find(player => player.playerId === playersSides.find(player => player.sideName === 'right').playerId).time : null} sek.<br />Ilość kart: {(playerRightClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'right').playerId).cardsAmount : null}</div>
+            </div>
+              <div className="players-cards-deck">
+                {generateRightCardDeck()}
+              </div>
             </div>
           </div>
           <div id="aside">

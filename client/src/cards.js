@@ -59,67 +59,87 @@ import card14Karo from './cards/card-14-karo.svg';
 const cards = [
   [
     {src: cardBack, title: 'Nieznana karta'},
+    {src: cardBack, title: 'Nieznana karta'},
+    {src: cardBack, title: 'Nieznana karta'},
+    {src: cardBack, title: 'Nieznana karta'}
+  ],
+  [
     {src: card2Pik, title: 'Karta pik dwójka'},
-    {src: card3Pik, title: 'Karta pik trójka'},
-    {src: card4Pik, title: 'Karta pik czwórka'},
-    {src: card5Pik, title: 'Karta pik piątka'},
-    {src: card6Pik, title: 'Karta pik szóstka'},
-    {src: card7Pik, title: 'Karta pik siódemka'},
-    {src: card8Pik, title: 'Karta pik ósemka'},
-    {src: card9Pik, title: 'Karta pik dziewiątka'},
-    {src: card10Pik, title: 'Karta pik dziesiątka'},
-    {src: card11Pik, title: 'Karta pik walet'},
-    {src: card12Pik, title: 'Karta pik dama'},
-    {src: card13Pik, title: 'Karta pik król'},
-    {src: card14Pik, title: 'Karta pik as'},
-  ],
-  [
-    {src: cardBack, title: 'Nieznana karta'},
     {src: card2Kier, title: 'Karta kier dwójka'},
-    {src: card3Kier, title: 'Karta kier trójka'},
-    {src: card4Kier, title: 'Karta kier czwórka'},
-    {src: card5Kier, title: 'Karta kier piątka'},
-    {src: card6Kier, title: 'Karta kier szóstka'},
-    {src: card7Kier, title: 'Karta kier siódemka'},
-    {src: card8Kier, title: 'Karta kier ósemka'},
-    {src: card9Kier, title: 'Karta kier dziewiątka'},
-    {src: card10Kier, title: 'Karta kier dziesiątka'},
-    {src: card11Kier, title: 'Karta kier walet'},
-    {src: card12Kier, title: 'Karta kier dama'},
-    {src: card13Kier, title: 'Karta kier król'},
-    {src: card14Kier, title: 'Karta kier as'},
-  ],
-  [
-    {src: cardBack, title: 'Nieznana karta'},
     {src: card2Trefl, title: 'Karta trefl dwójka'},
-    {src: card3Trefl, title: 'Karta trefl trójka'},
-    {src: card4Trefl, title: 'Karta trefl czwórka'},
-    {src: card5Trefl, title: 'Karta trefl piątka'},
-    {src: card6Trefl, title: 'Karta trefl szóstka'},
-    {src: card7Trefl, title: 'Karta trefl siódemka'},
-    {src: card8Trefl, title: 'Karta trefl ósemka'},
-    {src: card9Trefl, title: 'Karta trefl dziewiątka'},
-    {src: card10Trefl, title: 'Karta trefl dziesiątka'},
-    {src: card11Trefl, title: 'Karta trefl walet'},
-    {src: card12Trefl, title: 'Karta trefl dama'},
-    {src: card13Trefl, title: 'Karta trefl król'},
-    {src: card14Trefl, title: 'Karta trefl as'},
+    {src: card2Karo, title: 'Karta karo dwójka'}
   ],
   [
-    {src: cardBack, title: 'Nieznana karta'},
-    {src: card2Karo, title: 'Karta karo dwójka'},
-    {src: card3Karo, title: 'Karta karo trójka'},
-    {src: card4Karo, title: 'Karta karo czwórka'},
-    {src: card5Karo, title: 'Karta karo piątka'},
-    {src: card6Karo, title: 'Karta karo szóstka'},
-    {src: card7Karo, title: 'Karta karo siódemka'},
-    {src: card8Karo, title: 'Karta karo ósemka'},
-    {src: card9Karo, title: 'Karta karo dziewiątka'},
-    {src: card10Karo, title: 'Karta karo dziesiątka'},
-    {src: card11Karo, title: 'Karta karo walet'},
-    {src: card12Karo, title: 'Karta karo dama'},
-    {src: card13Karo, title: 'Karta karo król'},
-    {src: card14Karo, title: 'Karta karo as'},
+    {src: card3Pik, title: 'Karta pik trójka'},
+    {src: card3Kier, title: 'Karta kier trójka'},
+    {src: card3Trefl, title: 'Karta trefl trójka'},
+    {src: card3Karo, title: 'Karta karo trójka'}
+  ],
+  [
+    {src: card4Pik, title: 'Karta pik czwórka'},
+    {src: card4Kier, title: 'Karta kier czwórka'},
+    {src: card4Trefl, title: 'Karta trefl czwórka'},
+    {src: card4Karo, title: 'Karta karo czwórka'}
+  ],
+  [
+    {src: card5Pik, title: 'Karta pik piątka'},
+    {src: card5Kier, title: 'Karta kier piątka'},
+    {src: card5Trefl, title: 'Karta trefl piątka'},
+    {src: card5Karo, title: 'Karta karo piątka'}
+  ],
+  [
+    {src: card6Pik, title: 'Karta pik szóstka'},
+    {src: card6Kier, title: 'Karta kier szóstka'},
+    {src: card6Trefl, title: 'Karta trefl szóstka'},
+    {src: card6Karo, title: 'Karta karo szóstka'}
+  ],
+  [
+    {src: card7Pik, title: 'Karta pik siódemka'},
+    {src: card7Kier, title: 'Karta kier siódemka'},
+    {src: card7Trefl, title: 'Karta trefl siódemka'},
+    {src: card7Karo, title: 'Karta karo siódemka'}
+  ],
+  [
+    {src: card8Pik, title: 'Karta pik ósemka'},
+    {src: card8Kier, title: 'Karta kier ósemka'},
+    {src: card8Trefl, title: 'Karta trefl ósemka'},
+    {src: card8Karo, title: 'Karta karo ósemka'}
+  ],
+  [
+    {src: card9Pik, title: 'Karta pik dziewiątka'},
+    {src: card9Kier, title: 'Karta kier dziewiątka'},
+    {src: card9Trefl, title: 'Karta trefl dziewiątka'},
+    {src: card9Karo, title: 'Karta karo dziewiątka'}
+  ],
+  [
+    {src: card10Pik, title: 'Karta pik dziesiątka'},
+    {src: card10Kier, title: 'Karta kier dziesiątka'},
+    {src: card10Trefl, title: 'Karta trefl dziesiątka'},
+    {src: card10Karo, title: 'Karta karo dziesiątka'}
+  ],
+  [
+    {src: card11Pik, title: 'Karta pik walet'},
+    {src: card11Kier, title: 'Karta kier walet'},
+    {src: card11Trefl, title: 'Karta trefl walet'},
+    {src: card11Karo, title: 'Karta karo walet'}
+  ],
+  [
+    {src: card12Pik, title: 'Karta pik dama'},
+    {src: card12Kier, title: 'Karta kier dama'},
+    {src: card12Trefl, title: 'Karta trefl dama'},
+    {src: card12Karo, title: 'Karta karo dama'}
+  ],
+  [
+    {src: card13Pik, title: 'Karta pik król'},
+    {src: card13Kier, title: 'Karta kier król'},
+    {src: card13Trefl, title: 'Karta trefl król'},
+    {src: card13Karo, title: 'Karta karo król'}
+  ],
+  [
+    {src: card14Pik, title: 'Karta pik as'},
+    {src: card14Kier, title: 'Karta kier as'},
+    {src: card14Trefl, title: 'Karta trefl as'},
+    {src: card14Karo, title: 'Karta karo as'}
   ]
 ];
 
