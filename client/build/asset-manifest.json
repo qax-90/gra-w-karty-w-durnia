@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/static/css/main.992fdd6b.chunk.css",
-    "main.js": "/static/js/main.caa07d19.chunk.js",
-    "main.js.map": "/static/js/main.caa07d19.chunk.js.map",
+    "main.css": "/static/css/main.87f26730.chunk.css",
+    "main.js": "/static/js/main.3e8978b7.chunk.js",
+    "main.js.map": "/static/js/main.3e8978b7.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.059857bc.js",
     "runtime-main.js.map": "/static/js/runtime-main.059857bc.js.map",
     "static/js/2.6163efc6.chunk.js": "/static/js/2.6163efc6.chunk.js",
@@ -10,9 +10,10 @@
     "static/js/3.5cbff4fc.chunk.js": "/static/js/3.5cbff4fc.chunk.js",
     "static/js/3.5cbff4fc.chunk.js.map": "/static/js/3.5cbff4fc.chunk.js.map",
     "index.html": "/index.html",
-    "static/css/main.992fdd6b.chunk.css.map": "/static/css/main.992fdd6b.chunk.css.map",
+    "static/css/main.87f26730.chunk.css.map": "/static/css/main.87f26730.chunk.css.map",
     "static/js/2.6163efc6.chunk.js.LICENSE.txt": "/static/js/2.6163efc6.chunk.js.LICENSE.txt",
     "static/media/App.css": "/static/media/Merriweather-Regular.7f357b83.eot",
+    "static/media/arrow.054b0173.svg": "/static/media/arrow.054b0173.svg",
     "static/media/card-10-karo.e4cd0bfb.svg": "/static/media/card-10-karo.e4cd0bfb.svg",
     "static/media/card-10-kier.49d83c50.svg": "/static/media/card-10-kier.49d83c50.svg",
     "static/media/card-10-pik.2bcccc69.svg": "/static/media/card-10-pik.2bcccc69.svg",
@@ -71,7 +72,7 @@
   "entrypoints": [
     "static/js/runtime-main.059857bc.js",
     "static/js/2.6163efc6.chunk.js",
-    "static/css/main.992fdd6b.chunk.css",
-    "static/js/main.caa07d19.chunk.js"
+    "static/css/main.87f26730.chunk.css",
+    "static/js/main.3e8978b7.chunk.js"
   ]
 }
