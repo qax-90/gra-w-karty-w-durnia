@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import BottomCard from './BottomCard';
 import socketIoClient from 'socket.io-client';
 import removeIcon from './remove-icon.svg';
 import arrow from './arrow.svg';
@@ -14,7 +15,7 @@ function App() {
   const [ownPlayerId, setOwnPlayerId] = useState(2);
   const [ownChairId, setOwnChairId] = useState(3);
   const [ownPlayingRoomId, setOwnPlayingRoomId] = useState(0);
-  const [ownCardsDeck, setOwnCardsDeck] = useState([[2, 1], [1, 3], [8, 2], [6, 2], [4, 1], [12, 3], [2, 1]]);
+  const [ownCardsDeck, setOwnCardsDeck] = useState([[2, 1, false], [1, 3, false], [8, 2, false], [6, 2, false], [4, 1, false], [12, 3, false], [2, 1, false]]);
   const [ownRoomMaxPlayers, setOwnRoomMaxPlayers] = useState(2);
   const [ownRoomDurationTimeMins, setOwnRoomDurationTimeMins] = useState(5);
   const [ownRoomDurationTimeSecs, setOwnRoomDurationTimeSecs] = useState(0);
@@ -293,16 +294,6 @@ function App() {
     }
     socket.emit('start-game', {playingRoomId: ownPlayingRoomId});
   }
-  function generateBottomCardDeck() {
-    let temp = [];
-    let amount = ownCardsDeck.length;
-    for (let loop = 0; loop < amount; loop++) {
-      let cardFigure =  ownCardsDeck[loop][0];
-      let cardColor = ownCardsDeck[loop][1];
-      temp.push(<img key={'bottom-card-' + loop} src={cards[cardFigure][cardColor].src} title={cards[cardFigure][cardColor].title} style={{ transform: 'translateX(' + (loop * 35) + '%)'}} />);
-    }
-    return temp;
-  }
   function generateTopCardDeck() {
     let temp = [];
     let amount = (playerTopClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'top').playerId).cardsAmount : 0;
@@ -326,6 +317,22 @@ function App() {
       temp.push(<img key={'right-card-' + loop} src={cards[0][0].src} title={cards[0][0].title} style={{ transform: 'translate(-50%, ' + (loop * 35 * 2 / 3) + '%) rotate(90deg)'}} />);
     }
     return temp;
+  }
+  function selectCard(cardId) {
+    let cardFigure;
+    let cardColor;
+    let cardsDeck = [];
+    let selectedCardState = ownCardsDeck[cardId][2];
+    for (let loop = 0; loop < ownCardsDeck.length; loop++) {
+      cardFigure = ownCardsDeck[loop][0];
+      cardColor = ownCardsDeck[loop][1];
+      if (loop === cardId) {
+        cardsDeck.push([cardFigure, cardColor, !selectedCardState]);
+      } else {
+        cardsDeck.push([cardFigure, cardColor, false]);
+      }
+    }
+    setOwnCardsDeck(cardsDeck);
   }
   return (
     <div className="App">
@@ -421,7 +428,7 @@ function App() {
                 <div>Gracz: {(playerBottomClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'bottom').playerId).loginName : null}<br />Czas: {(playerBottomClass === 'shown') ? playersElapsedTime.find(player => player.playerId === playersSides.find(player => player.sideName === 'bottom').playerId).time : null} sek.<br />Ilość kart: {(playerBottomClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'bottom').playerId).cardsAmount : null}<br />{(playerBottomClass === 'shown' && playersSides.find(player => player.sideName === 'bottom').playerId === playingPlayerId) ? <img class="arrow" src={arrow} alt="Strzałka wskazująca aktualnie grającego gracza" title="Aktualnie grający gracz" /> : null}</div>
               </div>
               <div className="players-cards-deck">
-                {generateBottomCardDeck()}
+                {ownCardsDeck.map((item, index) => <BottomCard key={'bottom-card-' + index} item={item} index={index} onClick={e => selectCard(index)} />)}
               </div>
             </div>
             <div id="player-left" className={playerLeftClass}>

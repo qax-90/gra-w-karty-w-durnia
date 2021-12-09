@@ -296,8 +296,15 @@ div#game-container > div > div#table > div#player-top > div.players-cards-deck >
 
 div#game-container > div > div#table > div#player-bottom > div.players-cards-deck > img {
   position: absolute;
-  bottom: 0;
   height: 80%;
+}
+
+div#game-container > div > div#table > div#player-bottom > div.players-cards-deck > img.not-selected {
+  bottom: 0;
+}
+
+div#game-container > div > div#table > div#player-bottom > div.players-cards-deck > img.selected {
+  top: 0;
 }
 
 div#game-container > div > div#table > div#player-left > div.players-cards-deck > img,
