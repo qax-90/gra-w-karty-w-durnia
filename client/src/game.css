@@ -193,9 +193,9 @@ div#game-container > div > div#table > div#player-top {
   position: absolute;
   overflow: hidden;
   z-index: 100;
-  padding-left: 2.8rem;
+  padding-left: 3rem;
   left: 0;
-  width: calc(100% - 2.8rem);
+  width: calc(100% - 3rem);
 }
 
 div#game-container > div > div#table > div#player-bottom.shown {
@@ -240,39 +240,42 @@ div#game-container > div > div#table > div#player-left,
 div#game-container > div > div#table > div#player-right {
   position: absolute;
   overflow: hidden;
-  padding-top: 0.82rem;
+  padding-top: 0.5rem;
   top: 0;
   width: 2rem;
-  height: calc(100% - 0.82rem);
+  height: calc(100% - 0.5rem);
+}
+
+div#game-container > div > div#table > div > div.players-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  text-align: center;
+  font-size: 0.27rem;
 }
 
 div#game-container > div > div#table > div#player-bottom > div.players-status,
 div#game-container > div > div#table > div#player-top > div.players-status {
+  float: left;
+  width: 2rem;
+  height: 100%;
+  margin-right: 0.5rem;
+}
+
+div#game-container > div > div#table > div#player-bottom > div.players-status > div  {
   display: flex;
   align-items: center;
-  float: left;
-  text-align: center;
-  margin-right: 0.4rem;
-  font-size: 0.27rem;
-}
-
-div#game-container > div > div#table > div#player-bottom > div.players-status {
-  margin-top: 0.7rem;
-  height: calc(100% - 0.7rem);
-}
-
-div#game-container > div > div#table > div#player-top > div.players-status {
-  height: 100%;
+  position: absolute;
+  height: 80%;
+  bottom: 0;
 }
 
 div#game-container > div > div#table > div#player-left > div.players-status,
 div#game-container > div > div#table > div#player-right > div.players-status {
-  display: flex;
-  justify-content: center;
-  text-align: center;
   width: 100%;
-  margin-bottom: 0.55rem;
-  font-size: 0.27rem;
+  height: 2rem;
+  margin-bottom: 0.4rem;
 }
 
 div#game-container > div > div#table > div#player-left > div.players-status {
@@ -313,4 +316,20 @@ div#game-container > div > div#table > div#player-right > div.players-cards-deck
   top: 0;
   left: 50%;
   width: calc(100% * 2 / 3);
+}
+
+div#game-container > div > div#table > div#table-state-info {
+  position: absolute;
+  top: 50%;
+  left: 3.2rem;
+  transform: translateY(-50%);
+  text-align: center;
+  font-size: 0.27rem;
+}
+
+div#game-container > div > div#table > div#table-state-info > img {
+  display: inline-block;
+  width: 0.27rem;
+  height: 0.27rem;
+  filter: drop-shadow(0 0 0.05rem white);
 }

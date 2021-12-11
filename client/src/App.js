@@ -3,6 +3,10 @@ import BottomCard from './BottomCard';
 import socketIoClient from 'socket.io-client';
 import removeIcon from './remove-icon.svg';
 import arrow from './arrow.svg';
+import suitClub from './suits/suit-club.svg';
+import suitDiamond from './suits/suit-diamond.svg'
+import suitHeart from './suits/suit-heart.svg'
+import suitSpade from './suits/suit-spade.svg'
 import cards from './cards'
 import './App.css';
 import './index.css';
@@ -42,6 +46,7 @@ function App() {
   });
   const [playersSides, setPlayersSides] = useState([]);
   const [playingPlayerId, setPlayingPlayerId] = useState(3);
+  const [currentSuit, setCurrentSuit] = useState(0);
   const [playingRooms, setPlayingRooms] = useState([{
   	playingRoomId: 0,
   	stateClass: 'waiting',
@@ -320,16 +325,16 @@ function App() {
   }
   function selectCard(cardId) {
     let cardFigure;
-    let cardColor;
+    let cardSuit;
     let cardsDeck = [];
     let selectedCardState = ownCardsDeck[cardId][2];
     for (let loop = 0; loop < ownCardsDeck.length; loop++) {
       cardFigure = ownCardsDeck[loop][0];
-      cardColor = ownCardsDeck[loop][1];
+      cardSuit = ownCardsDeck[loop][1];
       if (loop === cardId) {
-        cardsDeck.push([cardFigure, cardColor, !selectedCardState]);
+        cardsDeck.push([cardFigure, cardSuit, !selectedCardState]);
       } else {
-        cardsDeck.push([cardFigure, cardColor, false]);
+        cardsDeck.push([cardFigure, cardSuit, false]);
       }
     }
     setOwnCardsDeck(cardsDeck);
@@ -423,9 +428,12 @@ function App() {
         <div>
           <div id="table">
             <div id="start-game-alert" onClick={startGame} className={startGameAlertClass}>{(ownPlayerId !== 0) ? 'Czekaj na potwierdzenie i\u00A0rozpoczęcie gry przez administratora' : 'Wszystkie krzesła zostały zajęte.\nCzy chcesz rozpocząć grę w\u00A0obecnym składzie?'}{(ownPlayerId === 0) ? <button type="button" onClick={startGame}>Tak, rozpocznijmy grę!</button> : null}</div>
+            <div id="table-state-info">Atut: {(currentSuit === 0) ? <img src={suitClub} alt="Ikona przedstawiająca obowiązujący atut trefl" title="Atut o kolorze trefl" /> : (currentSuit === 1) ? <img src={suitDiamond} alt="Ikona przedstawiająca obowiązujący atut karo" title="Atut o kolorze karo" /> : (currentSuit === 2) ? <img src={suitHeart} alt="Ikona przedstawiająca obowiązujący atut kier" title="Atut o kolorze kier" /> : (currentSuit === 3) ? <img src={suitSpade} alt="Ikona przedstawiająca obowiązujący atut pik" title="Atut o kolorze pik" /> : null}<br />Na stole: 5<br />Pozostało: 16</div>
             <div id="player-bottom" className={playerBottomClass}>
               <div className="players-status">
-                <div>Gracz: {(playerBottomClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'bottom').playerId).loginName : null}<br />Czas: {(playerBottomClass === 'shown') ? playersElapsedTime.find(player => player.playerId === playersSides.find(player => player.sideName === 'bottom').playerId).time : null} sek.<br />Ilość kart: {(playerBottomClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'bottom').playerId).cardsAmount : null}<br />{(playerBottomClass === 'shown' && playersSides.find(player => player.sideName === 'bottom').playerId === playingPlayerId) ? <img class="arrow" src={arrow} alt="Strzałka wskazująca aktualnie grającego gracza" title="Aktualnie grający gracz" /> : null}</div>
+                <div>
+                  <div>Gracz: {(playerBottomClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'bottom').playerId).loginName : null}<br />Czas: {(playerBottomClass === 'shown') ? playersElapsedTime.find(player => player.playerId === playersSides.find(player => player.sideName === 'bottom').playerId).time : null} sek.<br />Ilość kart: {(playerBottomClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'bottom').playerId).cardsAmount : null}<br />{(playerBottomClass === 'shown' && playersSides.find(player => player.sideName === 'bottom').playerId === playingPlayerId) ? <img class="arrow" src={arrow} alt="Strzałka wskazująca aktualnie grającego gracza" title="Aktualnie grający gracz" /> : null}</div>
+                </div>
               </div>
               <div className="players-cards-deck">
                 {ownCardsDeck.map((item, index) => <BottomCard key={'bottom-card-' + index} item={item} index={index} onClick={e => selectCard(index)} />)}
@@ -433,7 +441,9 @@ function App() {
             </div>
             <div id="player-left" className={playerLeftClass}>
             <div className="players-status">
-              <div>Gracz: {(playerLeftClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'left').playerId).loginName : null}<br />Czas: {(playerLeftClass === 'shown') ? playersElapsedTime.find(player => player.playerId === playersSides.find(player => player.sideName === 'left').playerId).time : null} sek.<br />Ilość kart: {(playerLeftClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'left').playerId).cardsAmount : null}<br />{(playerBottomClass === 'shown' && playersSides.find(player => player.sideName === 'left').playerId === playingPlayerId) ? <img class="arrow" src={arrow} alt="Strzałka wskazująca aktualnie grającego gracza" title="Aktualnie grający gracz" /> : null}</div>
+              <div>
+                <div>Gracz: {(playerLeftClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'left').playerId).loginName : null}<br />Czas: {(playerLeftClass === 'shown') ? playersElapsedTime.find(player => player.playerId === playersSides.find(player => player.sideName === 'left').playerId).time : null} sek.<br />Ilość kart: {(playerLeftClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'left').playerId).cardsAmount : null}<br />{(playerBottomClass === 'shown' && playersSides.find(player => player.sideName === 'left').playerId === playingPlayerId) ? <img class="arrow" src={arrow} alt="Strzałka wskazująca aktualnie grającego gracza" title="Aktualnie grający gracz" /> : null}</div>
+              </div>
             </div>
               <div className="players-cards-deck">
                 {generateLeftCardDeck()}
@@ -441,7 +451,9 @@ function App() {
             </div>
             <div id="player-top" className={playerTopClass}>
             <div className="players-status">
-              <div>Gracz: {(playerTopClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'top').playerId).loginName : null}<br />Czas: {(playerTopClass === 'shown') ? playersElapsedTime.find(player => player.playerId === playersSides.find(player => player.sideName === 'top').playerId).time : null} sek.<br />Ilość kart: {(playerTopClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'top').playerId).cardsAmount : null}<br />{(playerBottomClass === 'shown' && playersSides.find(player => player.sideName === 'top').playerId === playingPlayerId) ? <img class="arrow" src={arrow} alt="Strzałka wskazująca aktualnie grającego gracza" title="Aktualnie grający gracz" /> : null}</div>
+              <div>
+                <div>Gracz: {(playerTopClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'top').playerId).loginName : null}<br />Czas: {(playerTopClass === 'shown') ? playersElapsedTime.find(player => player.playerId === playersSides.find(player => player.sideName === 'top').playerId).time : null} sek.<br />Ilość kart: {(playerTopClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'top').playerId).cardsAmount : null}<br />{(playerBottomClass === 'shown' && playersSides.find(player => player.sideName === 'top').playerId === playingPlayerId) ? <img class="arrow" src={arrow} alt="Strzałka wskazująca aktualnie grającego gracza" title="Aktualnie grający gracz" /> : null}</div>
+              </div>
             </div>
               <div className="players-cards-deck">
                 {generateTopCardDeck()}
@@ -449,7 +461,9 @@ function App() {
             </div>
             <div id="player-right" className={playerRightClass}>
             <div className="players-status">
-              <div>Gracz: {(playerRightClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'right').playerId).loginName : null}<br />Czas: {(playerRightClass === 'shown') ? playersElapsedTime.find(player => player.playerId === playersSides.find(player => player.sideName === 'right').playerId).time : null} sek.<br />Ilość kart: {(playerRightClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'right').playerId).cardsAmount : null}<br />{(playerBottomClass === 'shown' && playersSides.find(player => player.sideName === 'right').playerId === playingPlayerId) ? <img class="arrow" src={arrow} alt="Strzałka wskazująca aktualnie grającego gracza" title="Aktualnie grający gracz" /> : null}</div>
+              <div>
+                <div>Gracz: {(playerRightClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'right').playerId).loginName : null}<br />Czas: {(playerRightClass === 'shown') ? playersElapsedTime.find(player => player.playerId === playersSides.find(player => player.sideName === 'right').playerId).time : null} sek.<br />Ilość kart: {(playerRightClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'right').playerId).cardsAmount : null}<br />{(playerBottomClass === 'shown' && playersSides.find(player => player.sideName === 'right').playerId === playingPlayerId) ? <img class="arrow" src={arrow} alt="Strzałka wskazująca aktualnie grającego gracza" title="Aktualnie grający gracz" /> : null}</div>
+              </div>
             </div>
               <div className="players-cards-deck">
                 {generateRightCardDeck()}
