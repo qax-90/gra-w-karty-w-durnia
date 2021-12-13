@@ -158,7 +158,7 @@ img.remove-icon {
 }
 
 img.arrow {
-  width: 0.9rem;
+  width: 0.85rem;
   margin-top: 0.2rem;
 }
 
@@ -196,6 +196,19 @@ div#game-container > div > div#table > div#player-top {
   padding-left: 3rem;
   left: 0;
   width: calc(100% - 3rem);
+}
+
+div#game-container > div > div#table > div#table-center.shown {
+  display: block;
+  position: absolute;
+  height: calc(3.2rem * 0.8);
+  left: 5.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+div#game-container > div > div#table > div#table-center.hidden {
+  display: none;
 }
 
 div#game-container > div > div#table > div#player-bottom.shown {
@@ -252,7 +265,7 @@ div#game-container > div > div#table > div > div.players-status {
   justify-content: center;
   position: relative;
   text-align: center;
-  font-size: 0.27rem;
+  font-size: 0.23rem;
 }
 
 div#game-container > div > div#table > div#player-bottom > div.players-status,
@@ -260,7 +273,7 @@ div#game-container > div > div#table > div#player-top > div.players-status {
   float: left;
   width: 2rem;
   height: 100%;
-  margin-right: 0.5rem;
+  margin-right: 0.45rem;
 }
 
 div#game-container > div > div#table > div#player-bottom > div.players-status > div  {
@@ -275,7 +288,7 @@ div#game-container > div > div#table > div#player-left > div.players-status,
 div#game-container > div > div#table > div#player-right > div.players-status {
   width: 100%;
   height: 2rem;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.28rem;
 }
 
 div#game-container > div > div#table > div#player-left > div.players-status {
@@ -286,12 +299,14 @@ div#game-container > div > div#table > div#player-right > div.players-status {
   transform: rotate(90deg);
 }
 
-div#game-container > div > div#table > div > div.players-cards-deck  {
+div#game-container > div > div#table > div > div.players-cards-deck,
+div#game-container > div > div#table > div#table-center > div.table-cards-deck {
   position: relative;
   height: 100%;
 }
 
-div#game-container > div > div#table > div#player-top > div.players-cards-deck > img {
+div#game-container > div > div#table > div#player-top > div.players-cards-deck > img,
+div#game-container > div > div#table > div#table-center > div.table-cards-deck > img {
   position: absolute;
   top: 0;
   height: 100%;
@@ -316,6 +331,14 @@ div#game-container > div > div#table > div#player-right > div.players-cards-deck
   top: 0;
   left: 50%;
   width: calc(100% * 2 / 3);
+}
+
+div#game-container > div > div#table > div#table-state-info.shown {
+  display: block;
+}
+
+div#game-container > div > div#table > div#table-state-info.hidden {
+  display: none;
 }
 
 div#game-container > div > div#table > div#table-state-info {

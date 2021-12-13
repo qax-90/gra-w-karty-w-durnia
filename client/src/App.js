@@ -19,13 +19,16 @@ function App() {
   const [ownPlayerId, setOwnPlayerId] = useState(2);
   const [ownChairId, setOwnChairId] = useState(3);
   const [ownPlayingRoomId, setOwnPlayingRoomId] = useState(0);
-  const [ownCardsDeck, setOwnCardsDeck] = useState([[2, 1, false], [1, 3, false], [8, 2, false], [6, 2, false], [4, 1, false], [12, 3, false], [2, 1, false]]);
+  const [ownCardsDeck, setOwnCardsDeck] = useState([[2, 1, false], [1, 3, false], [1, 2, false], [6, 2, false], [4, 1, false], [12, 0, false], [2, 1, false]]);
   const [ownRoomMaxPlayers, setOwnRoomMaxPlayers] = useState(2);
   const [ownRoomDurationTimeMins, setOwnRoomDurationTimeMins] = useState(5);
   const [ownRoomDurationTimeSecs, setOwnRoomDurationTimeSecs] = useState(0);
   const [ownRoomLowestCard, setOwnRoomLowestCard] = useState(6);
   const [ownChatMessage, setOwnChatMessage] = useState('');
   const [chatBox, setChatBox] = useState([]);
+  const [buttonPutCardDisabled, setButtonPutCardDisabled] = useState('disabled');
+  const [buttonTakeCardDisabled, setButtonTakeCardDisabled] = useState('disabled');
+  const [buttonfoldCardDisabled, setButtonFoldCardDisabled] = useState('disabled');
   const [buttonSendChatMessageDisabled, setButtonSendChatMessageDisabled] = useState('disabled');
   const [loginContainerClass, setLoginContainerClass] = useState('hidden');
   const [rulesContainerClass, setRulesContainerClass] = useState('hidden');
@@ -33,6 +36,8 @@ function App() {
   const [customizeContainerClass, setCustomizeContainerClass] = useState('hidden');
   const [gameContainerClass, setGameContainerClass] = useState('shown');
   const [startGameAlertClass, setStartGameAlertClass] = useState('shown');
+  const [tableStateInfoClass, setTableStateInfoClass] = useState('hidden');
+  const [tableCenterClass, setTableCenterClass] = useState('hidden');
   const [playerBottomClass, setPlayerBottomClass] = useState('hidden');
   const [playerTopClass, setPlayerTopClass] = useState('hidden');
   const [playerRightClass, setPlayerRightClass] = useState('hidden');
@@ -44,8 +49,9 @@ function App() {
     buttonLoginDisabled: 'disabled',
     loginValid: false
   });
+  const [tableCardsDeck, setTableCardsDeck] = useState([[1, 1], [6, 2], [4, 0]]);
   const [playersSides, setPlayersSides] = useState([]);
-  const [playingPlayerId, setPlayingPlayerId] = useState(3);
+  const [playingPlayerId, setPlayingPlayerId] = useState(2);
   const [currentSuit, setCurrentSuit] = useState(0);
   const [playingRooms, setPlayingRooms] = useState([{
   	playingRoomId: 0,
@@ -266,6 +272,8 @@ function App() {
         currentChairId++;
       }
     }
+    setTableCenterClass('shown');
+    setTableStateInfoClass('shown');
     if (currentFreeChairs === 0) {
       setPlayersSides([
         {sideId: 0, sideName: 'bottom', playerId: currentPlayersSides[0]},
@@ -297,7 +305,15 @@ function App() {
       setPlayerBottomClass('shown');
       setPlayerTopClass('shown');
     }
+    setStartGameAlertClass('hidden');
     socket.emit('start-game', {playingRoomId: ownPlayingRoomId});
+  }
+  function generateCenterTableCardDeck() {
+    let temp = [];
+    for (let loop = 0; loop < tableCardsDeck.length; loop++) {
+      temp.push(<img key={'center-card-' + loop} src={cards[tableCardsDeck[loop][0]][tableCardsDeck[loop][1]].src} title={cards[tableCardsDeck[loop][0]][tableCardsDeck[loop][1]].title} style={{ transform: 'translateX(' + (loop * 35) + '%)'}} />);
+    }
+    return temp;
   }
   function generateTopCardDeck() {
     let temp = [];
@@ -328,14 +344,31 @@ function App() {
     let cardSuit;
     let cardsDeck = [];
     let selectedCardState = ownCardsDeck[cardId][2];
+    let currentSelectedCardState = false;
     for (let loop = 0; loop < ownCardsDeck.length; loop++) {
       cardFigure = ownCardsDeck[loop][0];
       cardSuit = ownCardsDeck[loop][1];
       if (loop === cardId) {
         cardsDeck.push([cardFigure, cardSuit, !selectedCardState]);
+        if (!selectedCardState) {
+          currentSelectedCardState = true;
+        }
       } else {
         cardsDeck.push([cardFigure, cardSuit, false]);
       }
+    }
+    if (currentSelectedCardState) {
+      if (cardsDeck.length % 2 === 0) {
+        setButtonPutCardDisabled('');
+      } else if (cardsDeck.length % 2 === 1) {
+        if (cardsDeck[cardId][0] > tableCardsDeck[tableCardsDeck.length - 1][0] && cardsDeck[cardId][1] === tableCardsDeck[tableCardsDeck.length - 1][1]) {
+          setButtonPutCardDisabled('');
+        } else {
+          setButtonPutCardDisabled('disabled');
+        }
+      }
+    } else {
+      setButtonPutCardDisabled('disabled');
     }
     setOwnCardsDeck(cardsDeck);
   }
@@ -428,11 +461,16 @@ function App() {
         <div>
           <div id="table">
             <div id="start-game-alert" onClick={startGame} className={startGameAlertClass}>{(ownPlayerId !== 0) ? 'Czekaj na potwierdzenie i\u00A0rozpoczęcie gry przez administratora' : 'Wszystkie krzesła zostały zajęte.\nCzy chcesz rozpocząć grę w\u00A0obecnym składzie?'}{(ownPlayerId === 0) ? <button type="button" onClick={startGame}>Tak, rozpocznijmy grę!</button> : null}</div>
-            <div id="table-state-info">Atut: {(currentSuit === 0) ? <img src={suitClub} alt="Ikona przedstawiająca obowiązujący atut trefl" title="Atut o kolorze trefl" /> : (currentSuit === 1) ? <img src={suitDiamond} alt="Ikona przedstawiająca obowiązujący atut karo" title="Atut o kolorze karo" /> : (currentSuit === 2) ? <img src={suitHeart} alt="Ikona przedstawiająca obowiązujący atut kier" title="Atut o kolorze kier" /> : (currentSuit === 3) ? <img src={suitSpade} alt="Ikona przedstawiająca obowiązujący atut pik" title="Atut o kolorze pik" /> : null}<br />Na stole: 5<br />Pozostało: 16</div>
+            <div id="table-state-info" className={tableStateInfoClass}>Atut: {(currentSuit === 0) ? <img src={suitClub} alt="Ikona przedstawiająca obowiązujący atut trefl" title="Atut o kolorze trefl" /> : (currentSuit === 1) ? <img src={suitDiamond} alt="Ikona przedstawiająca obowiązujący atut karo" title="Atut o kolorze karo" /> : (currentSuit === 2) ? <img src={suitHeart} alt="Ikona przedstawiająca obowiązujący atut kier" title="Atut o kolorze kier" /> : (currentSuit === 3) ? <img src={suitSpade} alt="Ikona przedstawiająca obowiązujący atut pik" title="Atut o kolorze pik" /> : null}<br />Na stole: 5<br />Pozostało: 16</div>
+            <div id="table-center" className={tableCenterClass}>
+              <div className="table-cards-deck">
+                {generateCenterTableCardDeck()}
+              </div>
+            </div>
             <div id="player-bottom" className={playerBottomClass}>
               <div className="players-status">
                 <div>
-                  <div>Gracz: {(playerBottomClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'bottom').playerId).loginName : null}<br />Czas: {(playerBottomClass === 'shown') ? playersElapsedTime.find(player => player.playerId === playersSides.find(player => player.sideName === 'bottom').playerId).time : null} sek.<br />Ilość kart: {(playerBottomClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'bottom').playerId).cardsAmount : null}<br />{(playerBottomClass === 'shown' && playersSides.find(player => player.sideName === 'bottom').playerId === playingPlayerId) ? <img class="arrow" src={arrow} alt="Strzałka wskazująca aktualnie grającego gracza" title="Aktualnie grający gracz" /> : null}</div>
+                  <div>Gracz: {(playerBottomClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'bottom').playerId).loginName : null}<br />Czas: {(playerBottomClass === 'shown') ? playersElapsedTime.find(player => player.playerId === playersSides.find(player => player.sideName === 'bottom').playerId).time : null} sek.<br />Ilość kart: {(playerBottomClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'bottom').playerId).cardsAmount : null}<br />{(playerBottomClass === 'shown' && playersSides.find(player => player.sideName === 'bottom').playerId === playingPlayerId) ? <img className="arrow" src={arrow} alt="Strzałka wskazująca aktualnie grającego gracza" title="Aktualnie grający gracz" /> : null}</div>
                 </div>
               </div>
               <div className="players-cards-deck">
@@ -442,7 +480,7 @@ function App() {
             <div id="player-left" className={playerLeftClass}>
             <div className="players-status">
               <div>
-                <div>Gracz: {(playerLeftClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'left').playerId).loginName : null}<br />Czas: {(playerLeftClass === 'shown') ? playersElapsedTime.find(player => player.playerId === playersSides.find(player => player.sideName === 'left').playerId).time : null} sek.<br />Ilość kart: {(playerLeftClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'left').playerId).cardsAmount : null}<br />{(playerBottomClass === 'shown' && playersSides.find(player => player.sideName === 'left').playerId === playingPlayerId) ? <img class="arrow" src={arrow} alt="Strzałka wskazująca aktualnie grającego gracza" title="Aktualnie grający gracz" /> : null}</div>
+                <div>Gracz: {(playerLeftClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'left').playerId).loginName : null}<br />Czas: {(playerLeftClass === 'shown') ? playersElapsedTime.find(player => player.playerId === playersSides.find(player => player.sideName === 'left').playerId).time : null} sek.<br />Ilość kart: {(playerLeftClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'left').playerId).cardsAmount : null}<br />{(playerBottomClass === 'shown' && playersSides.find(player => player.sideName === 'left').playerId === playingPlayerId) ? <img className="arrow" src={arrow} alt="Strzałka wskazująca aktualnie grającego gracza" title="Aktualnie grający gracz" /> : null}</div>
               </div>
             </div>
               <div className="players-cards-deck">
@@ -452,7 +490,7 @@ function App() {
             <div id="player-top" className={playerTopClass}>
             <div className="players-status">
               <div>
-                <div>Gracz: {(playerTopClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'top').playerId).loginName : null}<br />Czas: {(playerTopClass === 'shown') ? playersElapsedTime.find(player => player.playerId === playersSides.find(player => player.sideName === 'top').playerId).time : null} sek.<br />Ilość kart: {(playerTopClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'top').playerId).cardsAmount : null}<br />{(playerBottomClass === 'shown' && playersSides.find(player => player.sideName === 'top').playerId === playingPlayerId) ? <img class="arrow" src={arrow} alt="Strzałka wskazująca aktualnie grającego gracza" title="Aktualnie grający gracz" /> : null}</div>
+                <div>Gracz: {(playerTopClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'top').playerId).loginName : null}<br />Czas: {(playerTopClass === 'shown') ? playersElapsedTime.find(player => player.playerId === playersSides.find(player => player.sideName === 'top').playerId).time : null} sek.<br />Ilość kart: {(playerTopClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'top').playerId).cardsAmount : null}<br />{(playerBottomClass === 'shown' && playersSides.find(player => player.sideName === 'top').playerId === playingPlayerId) ? <img className="arrow" src={arrow} alt="Strzałka wskazująca aktualnie grającego gracza" title="Aktualnie grający gracz" /> : null}</div>
               </div>
             </div>
               <div className="players-cards-deck">
@@ -462,7 +500,7 @@ function App() {
             <div id="player-right" className={playerRightClass}>
             <div className="players-status">
               <div>
-                <div>Gracz: {(playerRightClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'right').playerId).loginName : null}<br />Czas: {(playerRightClass === 'shown') ? playersElapsedTime.find(player => player.playerId === playersSides.find(player => player.sideName === 'right').playerId).time : null} sek.<br />Ilość kart: {(playerRightClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'right').playerId).cardsAmount : null}<br />{(playerBottomClass === 'shown' && playersSides.find(player => player.sideName === 'right').playerId === playingPlayerId) ? <img class="arrow" src={arrow} alt="Strzałka wskazująca aktualnie grającego gracza" title="Aktualnie grający gracz" /> : null}</div>
+                <div>Gracz: {(playerRightClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'right').playerId).loginName : null}<br />Czas: {(playerRightClass === 'shown') ? playersElapsedTime.find(player => player.playerId === playersSides.find(player => player.sideName === 'right').playerId).time : null} sek.<br />Ilość kart: {(playerRightClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'right').playerId).cardsAmount : null}<br />{(playerBottomClass === 'shown' && playersSides.find(player => player.sideName === 'right').playerId === playingPlayerId) ? <img className="arrow" src={arrow} alt="Strzałka wskazująca aktualnie grającego gracza" title="Aktualnie grający gracz" /> : null}</div>
               </div>
             </div>
               <div className="players-cards-deck">
@@ -475,7 +513,7 @@ function App() {
             {(typeof playingRooms[ownPlayingRoomId] !=='undefined') ? playingRooms[ownPlayingRoomId].chairs.map((item, index) =>
               <div key={'chair-' + item.chairId} className="chair">
                 <div>Krzesło {(item.chairId + 1)}</div>
-                <div>{(item.playerId === 'not-available') ? <span className="chair-not-available">Niedostępne</span> : ((item.playerId === 'not-assigned' && ownChairId === null) ? <button type="button" onClick={e => sitDown(item.chairId)}>Usiądź</button> : ((item.playerId === 'not-assigned' && ownChairId !== null) ? <span className="chair-waiting">Oczekuje</span> : <span className="chair-busy">{playingRooms[ownPlayingRoomId].players.find(player => player.playerId === item.playerId).loginName}{(ownPlayerId === 0) ? <img class="remove-icon" src={removeIcon} alt="Przycisk do wyproszenia gracza" title="Wyproś tego gracza z pokoju" /> : null}</span>))}</div>
+                <div>{(item.playerId === 'not-available') ? <span className="chair-not-available">Niedostępne</span> : ((item.playerId === 'not-assigned' && ownChairId === null) ? <button type="button" onClick={e => sitDown(item.chairId)}>Usiądź</button> : ((item.playerId === 'not-assigned' && ownChairId !== null) ? <span className="chair-waiting">Oczekuje</span> : <span className="chair-busy">{playingRooms[ownPlayingRoomId].players.find(player => player.playerId === item.playerId).loginName}{(ownPlayerId === 0) ? <img className="remove-icon" src={removeIcon} alt="Przycisk do wyproszenia gracza" title="Wyproś tego gracza z pokoju" /> : null}</span>))}</div>
               </div>) : null
             }
             </div>
@@ -483,9 +521,9 @@ function App() {
               <div className="actions">
                 <div>Wykonaj akcję</div>
                 <div>
-                  <button type="button" disabled>Połóż</button>
-                  <button type="button" disabled>Zabierz</button>
-                  <button type="button" disabled>Spasuj</button>
+                  <button type="button" disabled={buttonPutCardDisabled}>Połóż</button>
+                  <button type="button" disabled={buttonTakeCardDisabled}>Zabierz</button>
+                  <button type="button" disabled={buttonfoldCardDisabled}>Spasuj</button>
                 </div>
               </div>
             </div>
