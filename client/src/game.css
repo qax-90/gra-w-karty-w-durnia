@@ -9,18 +9,6 @@ div#game-container > div > div#aside > div#chairs {
   margin: 0.2rem 0.1rem 0.05rem 0.1rem;
 }
 
-@media (max-aspect-ratio: 1/1) {
-  div#game-container > div {
-    flex-direction: column;
-  }
-  div#game-container > div > div#aside > div#chairs {
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-  }
-  div#game-container > div > div#aside > div#chat > div > div:last-of-type > div:first-of-type {
-    height: 1rem;
-  }
-}
-
 @media (min-aspect-ratio: 1/1) {
   div#game-container > div {
     flex-direction: row;
@@ -36,6 +24,18 @@ div#game-container > div > div#aside > div#chairs {
   }
 }
 
+@media (max-aspect-ratio: 1/1) {
+  div#game-container > div {
+    flex-direction: column;
+  }
+  div#game-container > div > div#aside > div#chairs {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+  div#game-container > div > div#aside > div#chat > div > div:last-of-type > div:first-of-type {
+    height: 1rem;
+  }
+}
+
 div#game-container > div > div#table {
   position: relative;
   flex: 1 1 auto;
@@ -46,6 +46,7 @@ div#game-container > div > div#aside {
   display: flex;
   flex-direction: column;
   background-color: rgb(40, 47, 60);
+  z-index: 5000;
 }
 
 div#game-container > div > div#aside > div#chairs button {
@@ -193,44 +194,88 @@ div#game-container > div > div#table > div#player-top {
   position: absolute;
   overflow: hidden;
   z-index: 100;
-  padding-left: 3rem;
   left: 0;
-  width: calc(100% - 3rem);
 }
 
-div#game-container > div > div#table > div#table-center.shown {
-  display: block;
-  position: absolute;
-  height: calc(3.2rem * 0.8);
-  left: 5.9rem;
-  top: 50%;
-  transform: translateY(-50%);
+@media (min-aspect-ratio: 11/6) {
+  div#game-container > div > div#table > div#players-bar {
+    display: none;
+  }
+  div#game-container > div > div#table > div#table-center.shown {
+    display: block;
+    position: absolute;
+    height: calc(3.2rem * 0.8);
+    left: 5.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  div#game-container > div > div#table > div#player-bottom.shown {
+    display: block;
+    padding-left: 3rem;
+    width: calc(100% - 3rem);
+    height: 3.2rem;
+    bottom: 0.4rem;
+  }
+  div#game-container > div > div#table > div#player-top.shown {
+    display: block;
+    padding-left: 3rem;
+    width: calc(100% - 3rem);
+    top: 0.4rem;
+    height: 2rem;
+  }
+  div#game-container > div > div#table > div#player-left.shown {
+    display: block;
+    left: 0.4rem;
+  }
+  div#game-container > div > div#table > div#player-right.shown {
+    display: block;
+    right: 0.4rem;
+  }
+  div#game-container > div > div#table > div#table-state-info {
+    left: 3.2rem;
+  }
+}
+@media (max-aspect-ratio: 11/6) {
+  div#game-container > div > div#table > div#players-bar {
+    display: flex;
+    justify-content: space-evenly;
+    position: absolute;
+    top: 0.4rem;
+    left: 0;
+    width: 100%;
+    z-index: 200;
+  }
+  div#game-container > div > div#table > div#table-center.shown {
+    display: block;
+    position: absolute;
+    height: calc(3.2rem * 0.8);
+    left: 3.7rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  div#game-container > div > div#table > div#player-bottom.shown {
+    display: block;
+    padding-left: 0.8rem;
+    width: calc(100% - 0.8rem);
+    height: 3.2rem;
+    bottom: 0.4rem;
+  }
+  div#game-container > div > div#table > div#player-top.shown {
+    display: none;
+  }
+  div#game-container > div > div#table > div#player-left.shown {
+    display: none;
+  }
+  div#game-container > div > div#table > div#player-right.shown {
+    display: none;
+  }
+  div#game-container > div > div#table > div#table-state-info {
+    left: 1rem;
+  }
 }
 
 div#game-container > div > div#table > div#table-center.hidden {
   display: none;
-}
-
-div#game-container > div > div#table > div#player-bottom.shown {
-  display: block;
-  height: 3.2rem;
-  bottom: 0.4rem;
-}
-
-div#game-container > div > div#table > div#player-top.shown {
-  display: block;
-  top: 0.4rem;
-  height: 2rem;
-}
-
-div#game-container > div > div#table > div#player-left.shown {
-  display: block;
-  left: 0.4rem;
-}
-
-div#game-container > div > div#table > div#player-right.shown {
-  display: block;
-  right: 0.4rem;
 }
 
 div#game-container > div > div#table > div#player-bottom.hidden {
@@ -253,6 +298,7 @@ div#game-container > div > div#table > div#player-left,
 div#game-container > div > div#table > div#player-right {
   position: absolute;
   overflow: hidden;
+  z-index: 100;
   padding-top: 0.5rem;
   top: 0;
   width: 2rem;
@@ -344,7 +390,6 @@ div#game-container > div > div#table > div#table-state-info.hidden {
 div#game-container > div > div#table > div#table-state-info {
   position: absolute;
   top: 50%;
-  left: 3.2rem;
   transform: translateY(-50%);
   text-align: center;
   font-size: 0.27rem;
@@ -355,4 +400,9 @@ div#game-container > div > div#table > div#table-state-info > img {
   width: 0.27rem;
   height: 0.27rem;
   filter: drop-shadow(0 0 0.05rem white);
+}
+
+div#game-container > div > div#table > div#players-bar > div {
+  font-size: 0.25rem;
+  text-align: center;
 }

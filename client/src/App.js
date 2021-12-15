@@ -478,6 +478,11 @@ function App() {
                 {generateCenterTableCardDeck()}
               </div>
             </div>
+            <div id="players-bar">
+              <div>Gracz: aaa<br />Czas: 400 sek.<br />Ilość kart: 6</div>
+              <div>Gracz: bbb<br />Czas: 300 sek.<br />Ilość kart: 2</div>
+              <div>Gracz: ccc<br />Czas: 800 sek.<br />Ilość kart: 8</div>
+            </div>
             <div id="player-bottom" className={playerBottomClass}>
               <div className="players-status">
                 <div>
