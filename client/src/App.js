@@ -19,7 +19,8 @@ function App() {
   const [ownPlayerId, setOwnPlayerId] = useState(2);
   const [ownChairId, setOwnChairId] = useState(3);
   const [ownPlayingRoomId, setOwnPlayingRoomId] = useState(0);
-  const [ownCardsDeck, setOwnCardsDeck] = useState([[2, 1, false], [1, 3, false], [1, 2, false], [6, 2, false], [4, 1, false], [12, 0, false], [2, 1, false]]);
+  const [ownCardsDeck, setOwnCardsDeck] = useState([[2, 1, false], [1, 3, false], [1, 2, false], [7, 2, false], [4, 1, false], [12, 0, false], [2, 1, false]]);
+  const [ownCurrentAction, setOwnCurrentAction] = useState('addition');
   const [ownRoomMaxPlayers, setOwnRoomMaxPlayers] = useState(2);
   const [ownRoomDurationTimeMins, setOwnRoomDurationTimeMins] = useState(5);
   const [ownRoomDurationTimeSecs, setOwnRoomDurationTimeSecs] = useState(0);
@@ -27,8 +28,6 @@ function App() {
   const [ownChatMessage, setOwnChatMessage] = useState('');
   const [chatBox, setChatBox] = useState([]);
   const [buttonPutCardDisabled, setButtonPutCardDisabled] = useState('disabled');
-  const [buttonTakeCardDisabled, setButtonTakeCardDisabled] = useState('disabled');
-  const [buttonfoldCardDisabled, setButtonFoldCardDisabled] = useState('disabled');
   const [buttonSendChatMessageDisabled, setButtonSendChatMessageDisabled] = useState('disabled');
   const [loginContainerClass, setLoginContainerClass] = useState('hidden');
   const [rulesContainerClass, setRulesContainerClass] = useState('hidden');
@@ -49,10 +48,10 @@ function App() {
     buttonLoginDisabled: 'disabled',
     loginValid: false
   });
-  const [tableCardsDeck, setTableCardsDeck] = useState([[1, 1], [6, 2], [4, 0]]);
+  const [tableCardsDeck, setTableCardsDeck] = useState([[1, 1], [6, 2]]);
   const [playersSides, setPlayersSides] = useState([]);
   const [playingPlayerId, setPlayingPlayerId] = useState(2);
-  const [currentSuit, setCurrentSuit] = useState(0);
+  const [currentSuit, setCurrentSuit] = useState(2);
   const [playingRooms, setPlayingRooms] = useState([{
   	playingRoomId: 0,
   	stateClass: 'waiting',
@@ -358,13 +357,25 @@ function App() {
       }
     }
     if (currentSelectedCardState) {
-      if (cardsDeck.length % 2 === 0) {
-        setButtonPutCardDisabled('');
-      } else if (cardsDeck.length % 2 === 1) {
-        if (cardsDeck[cardId][0] > tableCardsDeck[tableCardsDeck.length - 1][0] && cardsDeck[cardId][1] === tableCardsDeck[tableCardsDeck.length - 1][1]) {
-          setButtonPutCardDisabled('');
+      if (ownCurrentAction === 'defense') {
+        if ((cardsDeck[cardId][0] > tableCardsDeck[tableCardsDeck.length - 1][0] && cardsDeck[cardId][1] === tableCardsDeck[tableCardsDeck.length - 1][1]) || (tableCardsDeck[tableCardsDeck.length - 1][1] !== currentSuit && cardsDeck[cardId][1] === currentSuit)) {
+          if (playingPlayerId === ownPlayerId) {
+            setButtonPutCardDisabled('');
+          }
         } else {
           setButtonPutCardDisabled('disabled');
+        }
+      } else if (ownCurrentAction === 'addition') {
+        if (tableCardsDeck.some(item => item[0] === cardsDeck[cardId][0])) {
+          if (playingPlayerId === ownPlayerId) {
+            setButtonPutCardDisabled('');
+          }
+        } else {
+          setButtonPutCardDisabled('disabled');
+        }
+      } else if (ownCurrentAction === 'attack') {
+        if (playingPlayerId === ownPlayerId) {
+          setButtonPutCardDisabled('');
         }
       }
     } else {
@@ -461,7 +472,7 @@ function App() {
         <div>
           <div id="table">
             <div id="start-game-alert" onClick={startGame} className={startGameAlertClass}>{(ownPlayerId !== 0) ? 'Czekaj na potwierdzenie i\u00A0rozpoczęcie gry przez administratora' : 'Wszystkie krzesła zostały zajęte.\nCzy chcesz rozpocząć grę w\u00A0obecnym składzie?'}{(ownPlayerId === 0) ? <button type="button" onClick={startGame}>Tak, rozpocznijmy grę!</button> : null}</div>
-            <div id="table-state-info" className={tableStateInfoClass}>Atut: {(currentSuit === 0) ? <img src={suitClub} alt="Ikona przedstawiająca obowiązujący atut trefl" title="Atut o kolorze trefl" /> : (currentSuit === 1) ? <img src={suitDiamond} alt="Ikona przedstawiająca obowiązujący atut karo" title="Atut o kolorze karo" /> : (currentSuit === 2) ? <img src={suitHeart} alt="Ikona przedstawiająca obowiązujący atut kier" title="Atut o kolorze kier" /> : (currentSuit === 3) ? <img src={suitSpade} alt="Ikona przedstawiająca obowiązujący atut pik" title="Atut o kolorze pik" /> : null}<br />Na stole: 5<br />Pozostało: 16</div>
+            <div id="table-state-info" className={tableStateInfoClass}>Atut: {(currentSuit === 0) ? <img src={suitSpade} alt="Ikona przedstawiająca obowiązujący atut pik" title="Atut o kolorze pik" /> : (currentSuit === 1) ? <img src={suitHeart} alt="Ikona przedstawiająca obowiązujący atut kier" title="Atut o kolorze kier" /> : (currentSuit === 2) ? <img src={suitClub} alt="Ikona przedstawiająca obowiązujący atut trefl" title="Atut o kolorze trefl" /> : (currentSuit === 3) ? <img src={suitDiamond} alt="Ikona przedstawiająca obowiązujący atut karo" title="Atut o kolorze karo" /> : null}<br />Na stole: {tableCardsDeck.length}<br />Pozostało: 16</div>
             <div id="table-center" className={tableCenterClass}>
               <div className="table-cards-deck">
                 {generateCenterTableCardDeck()}
@@ -522,8 +533,8 @@ function App() {
                 <div>Wykonaj akcję</div>
                 <div>
                   <button type="button" disabled={buttonPutCardDisabled}>Połóż</button>
-                  <button type="button" disabled={buttonTakeCardDisabled}>Zabierz</button>
-                  <button type="button" disabled={buttonfoldCardDisabled}>Spasuj</button>
+                  <button type="button" disabled={(playingPlayerId === ownPlayerId && ownCurrentAction === 'defense') ? '' : 'disabled'}>Zabierz</button>
+                  <button type="button" disabled={(playingPlayerId === ownPlayerId && ownCurrentAction === 'addition') ? '' : 'disabled'}>Spasuj</button>
                 </div>
               </div>
             </div>
