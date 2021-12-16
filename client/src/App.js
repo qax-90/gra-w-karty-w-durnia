@@ -26,6 +26,7 @@ function App() {
   const [ownRoomDurationTimeSecs, setOwnRoomDurationTimeSecs] = useState(0);
   const [ownRoomLowestCard, setOwnRoomLowestCard] = useState(6);
   const [ownChatMessage, setOwnChatMessage] = useState('');
+  const [mobileChatBoxClass, setMobileChatBoxClass] = useState('hidden');
   const [chatBox, setChatBox] = useState([]);
   const [buttonPutCardDisabled, setButtonPutCardDisabled] = useState('disabled');
   const [buttonSendChatMessageDisabled, setButtonSendChatMessageDisabled] = useState('disabled');
@@ -338,6 +339,9 @@ function App() {
     }
     return temp;
   }
+  function showOrHideChat() {
+
+  }
   function selectCard(cardId) {
     let cardFigure;
     let cardSuit;
@@ -540,10 +544,11 @@ function App() {
                   <button type="button" disabled={buttonPutCardDisabled}>Połóż</button>
                   <button type="button" disabled={(playingPlayerId === ownPlayerId && ownCurrentAction === 'defense') ? '' : 'disabled'}>Zabierz</button>
                   <button type="button" disabled={(playingPlayerId === ownPlayerId && ownCurrentAction === 'addition') ? '' : 'disabled'}>Spasuj</button>
+                  <button type="button" onClick={e => (mobileChatBoxClass === 'shown') ? setMobileChatBoxClass('hidden') : setMobileChatBoxClass('shown')}>{(mobileChatBoxClass === 'shown') ? 'Ukryj czat' : 'Pokaż czat'}</button>
                 </div>
               </div>
             </div>
-            <div id="chat">
+            <div id="chat" className={mobileChatBoxClass}>
               <div className="chat">
                 <div>Czat grupowy</div>
                 <div>

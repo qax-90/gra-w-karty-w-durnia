@@ -12,16 +12,16 @@ div#game-container > div > div#aside > div#chairs {
 div#game-container > div > div#table > div#table-center.shown {
   display: block;
   position: absolute;
-  height: calc(20vw * 0.8);
-  left: 3.7rem;
+  height: calc(30% * 0.8);
+  left: calc(2.9rem + 5%);
   top: 50%;
   transform: translateY(-50%);
 }
 div#game-container > div > div#table > div#player-bottom.shown {
   display: block;
-  padding-left: 0.8rem;
-  width: calc(100% - 0.8rem);
-  height: 20vw;
+  padding-left: 5%;
+  width: calc(100% - 5%);
+  height: 30%;
   bottom: 0.4rem;
 }
 
@@ -39,10 +39,20 @@ div#game-container > div > div#table > div#player-bottom.shown {
     height: 2.85rem;
   }
   div#game-container > div > div#table > div#table-center.shown {
-    height: calc(3.2rem * 0.8);
+    height: calc(20vw * 0.8);
+    max-height: calc(3.2rem * 0.8);
   }
   div#game-container > div > div#table > div#player-bottom.shown {
-    height: 3.2rem;
+    height: 20vw;
+    max-height: 3.2rem;
+  }
+  div#game-container > div > div#aside > div#actions button:last-of-type {
+    display: none;
+  }
+  div#game-container > div > div#aside > div#chat {
+    display: grid;
+    flex: 1 1 auto;
+    margin: 0.05rem 0.1rem 0.2rem 0.1rem;
   }
 }
 
@@ -53,8 +63,24 @@ div#game-container > div > div#table > div#player-bottom.shown {
   div#game-container > div > div#aside > div#chairs {
     grid-template-columns: 1fr 1fr 1fr 1fr;
   }
-  div#game-container > div > div#aside > div#chat > div > div:last-of-type > div:first-of-type {
-    height: 1rem;
+  div#game-container > div > div#aside > div#actions button:last-of-type {
+    display: block;
+  }
+  div#game-container > div > div#aside > div#chat div#chat-box {
+    height: 3rem;
+  }
+  div#game-container > div > div#aside > div#chat.hidden {
+    display: none;
+  }
+  div#game-container > div > div#aside > div#chat.shown {
+    display: block;
+    position: fixed;
+    width: 80vw;
+    height: 50vh;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+    z-index: 10000;
   }
 }
 
@@ -100,12 +126,6 @@ div#game-container > div > div#aside > div#chat input[type="text"] {
 div#game-container > div > div#aside > div#actions {
   display: grid;
   margin: 0.05rem 0.1rem 0.05rem 0.1rem;
-}
-
-div#game-container > div > div#aside > div#chat {
-  display: grid;
-  flex: 1 1 auto;
-  margin: 0.05rem 0.1rem 0.2rem 0.1rem;
 }
 
 div#game-container > div > div#aside > div#chat > div > div:last-of-type {
@@ -158,7 +178,7 @@ div#aside > div#actions > div.actions > div:last-of-type {
 
 div#aside > div#chat > div.chat > div:last-of-type {
   flex: 1 1 auto;
-  background-color: rgba(0, 0, 0, 0.16);
+  background-color: rgb(34, 39, 50);
 }
 
 div#aside > div#chairs > div.chair > div:last-of-type > span.chair-busy {
@@ -224,12 +244,12 @@ div#game-container > div > div#table > div#player-top {
     display: none;
   }
   div#game-container > div > div#table > div#table-center.shown {
-  left: 5.9rem;
-}
-div#game-container > div > div#table > div#player-bottom.shown {
-  padding-left: 3rem;
-  width: calc(100% - 3rem);
-}
+    left: 5.9rem;
+  }
+  div#game-container > div > div#table > div#player-bottom.shown {
+    padding-left: 3rem;
+    width: calc(100% - 3rem);
+  }
   div#game-container > div > div#table > div#player-top.shown {
     display: block;
     padding-left: 3rem;
@@ -269,7 +289,7 @@ div#game-container > div > div#table > div#player-bottom.shown {
     display: none;
   }
   div#game-container > div > div#table > div#table-state-info {
-    left: 1rem;
+    left: 5%;
   }
 }
 
