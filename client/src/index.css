@@ -351,6 +351,10 @@ div#customize-container button:last-of-type {
   margin: 0.2rem auto 0 auto;
 }
 
+div#game-container div.hidden {
+  display: none;
+}
+
 @keyframes showing-starting {
   0% {
     opacity: 0;

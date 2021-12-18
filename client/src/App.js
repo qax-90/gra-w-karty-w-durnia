@@ -1,4 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import Rules from './Rules';
+import PlayerBottom from './PlayerBottom';
+import PlayerLeft from './PlayerLeft';
+import PlayerTop from './PlayerTop';
+import PlayerRight from './PlayerRight';
 import BottomCard from './BottomCard';
 import socketIoClient from 'socket.io-client';
 import removeIcon from './remove-icon.svg';
@@ -38,6 +43,7 @@ function App() {
   const [startGameAlertClass, setStartGameAlertClass] = useState('shown');
   const [tableStateInfoClass, setTableStateInfoClass] = useState('hidden');
   const [tableCenterClass, setTableCenterClass] = useState('hidden');
+  const [playersBarClass, setPlayersBarClass] = useState('hidden');
   const [playerBottomClass, setPlayerBottomClass] = useState('hidden');
   const [playerTopClass, setPlayerTopClass] = useState('hidden');
   const [playerRightClass, setPlayerRightClass] = useState('hidden');
@@ -274,6 +280,7 @@ function App() {
     }
     setTableCenterClass('shown');
     setTableStateInfoClass('shown');
+    setPlayersBarClass('shown');
     if (currentFreeChairs === 0) {
       setPlayersSides([
         {sideId: 0, sideName: 'bottom', playerId: currentPlayersSides[0]},
@@ -339,9 +346,6 @@ function App() {
     }
     return temp;
   }
-  function showOrHideChat() {
-
-  }
   function selectCard(cardId) {
     let cardFigure;
     let cardSuit;
@@ -400,15 +404,7 @@ function App() {
       </div>
       <div id="rules-container" className={rulesContainerClass}>
         <p>Zasady gry w karty w&nbsp;durnia:</p>
-        <div>
-          <p>Gra w&nbsp;karty pod nazwą &bdquo;dureń&rdquo; wydaje się być najpopularniejszą grą karcianą w&nbsp;Rosji. Nie jest przesadą twierdzenie, że każdy rosyjski gracz w&nbsp;karty zna tą grę. Durniem w grze pozostaje przegrany &ndash; gracz, któremu zostały karty gdy pozostali się ich pozbyli. Można grać w dowolną liczbę osób od dwóch do sześciu, grając indywidualnie bądź w&nbsp;zespołach po dwóch lub trzech graczy siedzących na przemian. Gra się 36&nbsp;kartami, karty w każdym kolorze (tj. pik, kier, karo, trefl), siła kart od najwyższej do najniższej: as, król, dama, walet, 10, 9, 8, 7, 6.</p>
-          <p>Na początku, rozdający tasuje i&nbsp;rozdaje każdemu graczowi po sześć zakrytych kart. Następnie odsłania się jedną kartę, jej kolor jest atutem. Pozostałe nierozdane karty (nazywane stosem) kładzie się zakryte na górze karty atutowej. Gracze podnoszą swoje karty i&nbsp;oglądają je. Grę zaczyna gracz siedzący na lewo od rozdającego.</p>
-          <p>Gra składa się z serii ataków. Podczas ataku jest atakujący (któremu mogą pomagać inni sprzymierzeni gracze) oraz obrońca (który broni się sam). Atakujący zaczyna poprzez zagranie karty na stół przed obrońcę. Obrońca próbuje odeprzeć atak poprzez zakrycie jej kartą wyższą. Karta atakująca, która nie jest atutem może zostać pobita kartą wyższą tego samego koloru, lub dowolnym atutem. Karta atutowa może być pobita jedynie poprzez zagranie wyższego atutu. Należy zauważyć, że karta nieatutowa może zawsze zostać pobita jakimkolwiek atutem.</p>
-          <p>Jeśli obrońca odeprze pierwszy atak, atakujący może go kontynuować poprzez zagranie kolejnej karty. Również inni przeciwnicy obrońcy (gracze sprzymierzeni z&nbsp;atakującym) mogą dołączyć się do ataku, jeśli mają odpowiednie karty. Jednak główny atakujący ma zawsze pierwszeństwo &ndash; inni mogą dołączyć się jedynie za jego zgodą. Każda nowa dokładana karta atakująca musi być o&nbsp;tej samej figurze co karty dotychczas zagrane podczas ataku, zarówno przez atakującego jak i&nbsp;obrońcę. Ponadto, całkowita liczba kart zagranych przez atakujących podczas ataku nie może przekroczyć sześciu. Jeśli obrońca przed atakiem ma mniej niż sześć kart, liczba kart zagranych przez atakujących nie może być większa niż liczba kart w&nbsp;ręce obrońcy. Obrońca odpiera cały atak gdy pobije wszystkie karty atakujące (maksymalnie sześć) zagrane dotychczas oraz żaden z&nbsp;przeciwników nie może lub nie chce kontynuować ataku lub obrońca nie posiada żadnych kart na ręce i&nbsp;wszystkie jego karty zostały użyte do odparcia ataku. Kiedy atak zostaje odparty, wszystkie karty zagrane w nim (karty atakujące i&nbsp;broniące) zostają odłożone na osobny stos i&nbsp;nie biorą już udziału w tym rozdaniu. Obrońca zostaje atakującym, a&nbsp;gracz na lewo nowym obrońcą.</p>
-          <p>Jeśli obrońca nie może lub nie chce pobić karty atakującej, podnosi ją i&nbsp;staje się częścią ręki obrońcy &ndash; w&nbsp;tym wypadku atak się powiódł i&nbsp;obrońca nie zostaje atakującym. Następnym atakującym jest gracz po lewej od obrońcy a&nbsp;następnym obrońcą gracz po lewej od nowego atakującego.</p>
-          <p>Po zakończeniu ataku, wszyscy gracze którzy mają mniej niż sześć kart muszą uzupełnić swoje ręce do sześciu poprzez pobranie odpowiedniej ilości kart ze stosu. Najpierw dobiera atakujący, później inni gracze, którzy brali udział w&nbsp;ataku w&nbsp;kolejności zgodnej z&nbsp;ruchem wskazówek zegara a&nbsp;na końcu obrońca. Jeśli nie ma wystarczającej ilości kart w&nbsp;stosie, karty pobierane są jak zwykle aż do momentu wyczerpania stosu. Może się zdarzyć, że późniejsi gracze nie pobiorą żadnych kart. Ostatni atut (odkryty) jest pobierany jako ostatnia karta ze stosu. Po wyczerpaniu stosu gra jest kontynuowana bez dobierania.</p>
-          <p>Generalny kierunek gry jest zgodny z&nbsp;ruchem wskazówek zegara. Jeśli atak zostaje odparty, obrońca staje się atakującym a&nbsp;następny gracz w kolejności nowym obrońcą. Jeśli atak się udaje, obrońca nie zostaje atakującym. Nowym atakującym jest następny gracz w&nbsp;kolejności po obrońcy, a&nbsp;nowym obrońcą gracz po lewej od nowego atakującego. Kiedy gracze pozbywają się kart, odpadają z rozgrywki a&nbsp;pozostali kontynuują. Wygrywa gracz, który pierwszy pozbędzie się kart, chyba że przedostatnia karta zostanie pobita &ndash; wtedy jest rozegrane. &bdquo;Durniem&rdquo; zostaje gracz, któremu pozostały karty na ręce.</p>
-        </div>
+        <Rules />
         <button type="button" onClick={showLogin}>OK, rozumiem!</button>
       </div>
       <div id="rooms-container" className={roomsContainerClass}>
@@ -482,16 +478,14 @@ function App() {
                 {generateCenterTableCardDeck()}
               </div>
             </div>
-            <div id="players-bar">
-              <div>Gracz: aaa<br />Czas: 400 sek.<br />Ilość kart: 6</div>
-              <div>Gracz: bbb<br />Czas: 300 sek.<br />Ilość kart: 2</div>
-              <div>Gracz: ccc<br />Czas: 800 sek.<br />Ilość kart: 8</div>
+            <div id="players-bar" className={playersBarClass}>
+              <PlayerLeft playerLeftClass={playerLeftClass} ownPlayingRoomId={ownPlayingRoomId} playingRooms={playingRooms} playersElapsedTime={playersElapsedTime} playersSides={playersSides} playingPlayerId={playingPlayerId} />
+              <PlayerTop playerTopClass={playerTopClass} ownPlayingRoomId={ownPlayingRoomId} playingRooms={playingRooms} playersElapsedTime={playersElapsedTime} playersSides={playersSides} playingPlayerId={playingPlayerId} />
+              <PlayerRight playerRightClass={playerRightClass} ownPlayingRoomId={ownPlayingRoomId} playingRooms={playingRooms} playersElapsedTime={playersElapsedTime} playersSides={playersSides} playingPlayerId={playingPlayerId} />
             </div>
             <div id="player-bottom" className={playerBottomClass}>
               <div className="players-status">
-                <div>
-                  <div>Gracz: {(playerBottomClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'bottom').playerId).loginName : null}<br />Czas: {(playerBottomClass === 'shown') ? playersElapsedTime.find(player => player.playerId === playersSides.find(player => player.sideName === 'bottom').playerId).time : null} sek.<br />Ilość kart: {(playerBottomClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'bottom').playerId).cardsAmount : null}<br />{(playerBottomClass === 'shown' && playersSides.find(player => player.sideName === 'bottom').playerId === playingPlayerId) ? <img className="arrow" src={arrow} alt="Strzałka wskazująca aktualnie grającego gracza" title="Aktualnie grający gracz" /> : null}</div>
-                </div>
+                <PlayerBottom playerBottomClass={playerBottomClass} ownPlayingRoomId={ownPlayingRoomId} playingRooms={playingRooms} playersElapsedTime={playersElapsedTime} playersSides={playersSides} playingPlayerId={playingPlayerId} />
               </div>
               <div className="players-cards-deck">
                 {ownCardsDeck.map((item, index) => <BottomCard key={'bottom-card-' + index} item={item} index={index} onClick={e => selectCard(index)} />)}
@@ -499,9 +493,7 @@ function App() {
             </div>
             <div id="player-left" className={playerLeftClass}>
             <div className="players-status">
-              <div>
-                <div>Gracz: {(playerLeftClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'left').playerId).loginName : null}<br />Czas: {(playerLeftClass === 'shown') ? playersElapsedTime.find(player => player.playerId === playersSides.find(player => player.sideName === 'left').playerId).time : null} sek.<br />Ilość kart: {(playerLeftClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'left').playerId).cardsAmount : null}<br />{(playerBottomClass === 'shown' && playersSides.find(player => player.sideName === 'left').playerId === playingPlayerId) ? <img className="arrow" src={arrow} alt="Strzałka wskazująca aktualnie grającego gracza" title="Aktualnie grający gracz" /> : null}</div>
-              </div>
+              <PlayerLeft playerLeftClass={playerLeftClass} ownPlayingRoomId={ownPlayingRoomId} playingRooms={playingRooms} playersElapsedTime={playersElapsedTime} playersSides={playersSides} playingPlayerId={playingPlayerId} />
             </div>
               <div className="players-cards-deck">
                 {generateLeftCardDeck()}
@@ -509,9 +501,7 @@ function App() {
             </div>
             <div id="player-top" className={playerTopClass}>
             <div className="players-status">
-              <div>
-                <div>Gracz: {(playerTopClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'top').playerId).loginName : null}<br />Czas: {(playerTopClass === 'shown') ? playersElapsedTime.find(player => player.playerId === playersSides.find(player => player.sideName === 'top').playerId).time : null} sek.<br />Ilość kart: {(playerTopClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'top').playerId).cardsAmount : null}<br />{(playerBottomClass === 'shown' && playersSides.find(player => player.sideName === 'top').playerId === playingPlayerId) ? <img className="arrow" src={arrow} alt="Strzałka wskazująca aktualnie grającego gracza" title="Aktualnie grający gracz" /> : null}</div>
-              </div>
+              <PlayerTop playerTopClass={playerTopClass} ownPlayingRoomId={ownPlayingRoomId} playingRooms={playingRooms} playersElapsedTime={playersElapsedTime} playersSides={playersSides} playingPlayerId={playingPlayerId} />
             </div>
               <div className="players-cards-deck">
                 {generateTopCardDeck()}
@@ -519,9 +509,7 @@ function App() {
             </div>
             <div id="player-right" className={playerRightClass}>
             <div className="players-status">
-              <div>
-                <div>Gracz: {(playerRightClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'right').playerId).loginName : null}<br />Czas: {(playerRightClass === 'shown') ? playersElapsedTime.find(player => player.playerId === playersSides.find(player => player.sideName === 'right').playerId).time : null} sek.<br />Ilość kart: {(playerRightClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'right').playerId).cardsAmount : null}<br />{(playerBottomClass === 'shown' && playersSides.find(player => player.sideName === 'right').playerId === playingPlayerId) ? <img className="arrow" src={arrow} alt="Strzałka wskazująca aktualnie grającego gracza" title="Aktualnie grający gracz" /> : null}</div>
-              </div>
+              <PlayerRight playerRightClass={playerRightClass} ownPlayingRoomId={ownPlayingRoomId} playingRooms={playingRooms} playersElapsedTime={playersElapsedTime} playersSides={playersSides} playingPlayerId={playingPlayerId} />
             </div>
               <div className="players-cards-deck">
                 {generateRightCardDeck()}

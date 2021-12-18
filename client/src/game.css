@@ -69,9 +69,7 @@ div#game-container > div > div#table > div#player-bottom.shown {
   div#game-container > div > div#aside > div#chat div#chat-box {
     height: 3rem;
   }
-  div#game-container > div > div#aside > div#chat.hidden {
-    display: none;
-  }
+
   div#game-container > div > div#aside > div#chat.shown {
     display: block;
     position: fixed;
@@ -209,10 +207,6 @@ div#player-left img.arrow {
   transform: rotate(180deg);
 }
 
-div#start-game-alert.hidden {
-  display: none;
-}
-
 div#start-game-alert.shown {
   display: block;
   position: absolute;
@@ -270,7 +264,7 @@ div#game-container > div > div#table > div#player-top {
   }
 }
 @media (max-aspect-ratio: 11/6) {
-  div#game-container > div > div#table > div#players-bar {
+  div#game-container > div > div#table > div#players-bar.shown {
     display: flex;
     justify-content: space-evenly;
     position: absolute;
@@ -291,26 +285,6 @@ div#game-container > div > div#table > div#player-top {
   div#game-container > div > div#table > div#table-state-info {
     left: 5%;
   }
-}
-
-div#game-container > div > div#table > div#table-center.hidden {
-  display: none;
-}
-
-div#game-container > div > div#table > div#player-bottom.hidden {
-  display: none;
-}
-
-div#game-container > div > div#table > div#player-top.hidden {
-  display: none;
-}
-
-div#game-container > div > div#table > div#player-left.hidden {
-  display: none;
-}
-
-div#game-container > div > div#table > div#player-right.hidden {
-  display: none;
 }
 
 div#game-container > div > div#table > div#player-left,
@@ -400,10 +374,6 @@ div#game-container > div > div#table > div#player-right > div.players-cards-deck
 
 div#game-container > div > div#table > div#table-state-info.shown {
   display: block;
-}
-
-div#game-container > div > div#table > div#table-state-info.hidden {
-  display: none;
 }
 
 div#game-container > div > div#table > div#table-state-info {
