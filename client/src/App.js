@@ -4,11 +4,11 @@ import LeftPlayerStatus from './LeftPlayerStatus';
 import TopPlayerStatus from './TopPlayerStatus';
 import RightPlayerStatus from './RightPlayerStatus';
 import BottomPlayerStatus from './BottomPlayerStatus';
-import CenterTableCardsDeck from './CenterTableCardsDeck';
 import LeftPlayerCardsDeck from './LeftPlayerCardsDeck';
 import TopPlayerCardsDeck from './TopPlayerCardsDeck';
 import RightPlayerCardsDeck from './RightPlayerCardsDeck';
-import BottomCard from './BottomCard';
+import BottomPlayerCardsDeck from './BottomPlayerCardsDeck';
+import CenterTableCardsDeck from './CenterTableCardsDeck';
 import socketIoClient from 'socket.io-client';
 import removeIcon from './remove-icon.svg';
 import cards from './cards'
@@ -61,7 +61,7 @@ function App() {
   });
   const [tableCardsDeck, setTableCardsDeck] = useState([[1, 1], [6, 2]]);
   const [playersSides, setPlayersSides] = useState([]);
-  const [playingPlayerId, setPlayingPlayerId] = useState(1);
+  const [playingPlayerId, setPlayingPlayerId] = useState(2);
   const [currentSuit, setCurrentSuit] = useState(2);
   const [playingRooms, setPlayingRooms] = useState([{
   	playingRoomId: 0,
@@ -164,7 +164,7 @@ function App() {
     if (chatMessage.length >= 1) {
       setButtonSendChatMessageDisabled('');
     } else {
-      setButtonSendChatMessageDisabled(' disabled');
+      setButtonSendChatMessageDisabled('disabled');
     }
   }
   function loginUser() {
@@ -448,7 +448,7 @@ function App() {
             <div id="table-state-info" className={tableStateInfoClass}>Atut: {(currentSuit === 0) ? <img src={suitSpade} alt="Ikona przedstawiająca obowiązujący atut pik" title="Atut o kolorze pik" /> : (currentSuit === 1) ? <img src={suitHeart} alt="Ikona przedstawiająca obowiązujący atut kier" title="Atut o kolorze kier" /> : (currentSuit === 2) ? <img src={suitClub} alt="Ikona przedstawiająca obowiązujący atut trefl" title="Atut o kolorze trefl" /> : (currentSuit === 3) ? <img src={suitDiamond} alt="Ikona przedstawiająca obowiązujący atut karo" title="Atut o kolorze karo" /> : null}<br />Na stole: {tableCardsDeck.length}<br />Pozostało: 16</div>
             <div id="table-center" className={tableCenterClass}>
               <div className="table-cards-deck">
-                <CenterTableCardsDeck tableCardsDeck={tableCardsDeck} />
+                {tableCardsDeck.map((item, index) => <CenterTableCardsDeck key={'center-card-' + index} item={item} index={index} />)}
               </div>
             </div>
             <div id="players-bar" className={playersBarClass}>
@@ -461,7 +461,7 @@ function App() {
                 <BottomPlayerStatus bottomPlayerClass={bottomPlayerClass} ownPlayingRoomId={ownPlayingRoomId} playingRooms={playingRooms} playersElapsedTime={playersElapsedTime} playersSides={playersSides} playingPlayerId={playingPlayerId} />
               </div>
               <div className="players-cards-deck">
-                {ownCardsDeck.map((item, index) => <BottomCard key={'bottom-card-' + index} item={item} index={index} onClick={e => selectCard(index)} />)}
+                {ownCardsDeck.map((item, index) => <BottomPlayerCardsDeck key={'bottom-card-' + index} item={item} index={index} onClick={e => selectCard(index)} />)}
               </div>
             </div>
             <div id="player-left" className={leftPlayerClass}>

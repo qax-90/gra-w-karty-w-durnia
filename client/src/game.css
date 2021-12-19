@@ -198,8 +198,11 @@ img.remove-icon {
   vertical-align: middle;
 }
 
+img.arrow {
+  width: 0.8rem;
+}
+
 div.players-status img.arrow {
-  width: 0.85rem;
   margin-top: 0.2rem;
 }
 
@@ -208,7 +211,6 @@ div#player-left img.arrow {
 }
 
 div#players-bar img.arrow {
-  width: 0.8rem;
   margin-top: 0.25rem;
   transform: rotate(270deg);
 }
