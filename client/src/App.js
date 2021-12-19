@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import Rules from './Rules';
-import PlayerBottom from './PlayerBottom';
-import PlayerLeft from './PlayerLeft';
-import PlayerTop from './PlayerTop';
-import PlayerRight from './PlayerRight';
+import LeftPlayerStatus from './LeftPlayerStatus';
+import TopPlayerStatus from './TopPlayerStatus';
+import RightPlayerStatus from './RightPlayerStatus';
+import BottomPlayerStatus from './BottomPlayerStatus';
+import CenterTableCardsDeck from './CenterTableCardsDeck';
+import LeftPlayerCardsDeck from './LeftPlayerCardsDeck';
+import TopPlayerCardsDeck from './TopPlayerCardsDeck';
+import RightPlayerCardsDeck from './RightPlayerCardsDeck';
 import BottomCard from './BottomCard';
 import socketIoClient from 'socket.io-client';
 import removeIcon from './remove-icon.svg';
+import cards from './cards'
 import arrow from './arrow.svg';
 import suitClub from './suits/suit-club.svg';
 import suitDiamond from './suits/suit-diamond.svg'
 import suitHeart from './suits/suit-heart.svg'
 import suitSpade from './suits/suit-spade.svg'
-import cards from './cards'
 import './App.css';
 import './index.css';
 import './game.css';
@@ -44,10 +48,10 @@ function App() {
   const [tableStateInfoClass, setTableStateInfoClass] = useState('hidden');
   const [tableCenterClass, setTableCenterClass] = useState('hidden');
   const [playersBarClass, setPlayersBarClass] = useState('hidden');
-  const [playerBottomClass, setPlayerBottomClass] = useState('hidden');
-  const [playerTopClass, setPlayerTopClass] = useState('hidden');
-  const [playerRightClass, setPlayerRightClass] = useState('hidden');
-  const [playerLeftClass, setPlayerLeftClass] = useState('hidden');
+  const [bottomPlayerClass, setBottomPlayerClass] = useState('hidden');
+  const [topPlayerClass, setTopPlayerClass] = useState('hidden');
+  const [rightPlayerClass, setRightPlayerClass] = useState('hidden');
+  const [leftPlayerClass, setLeftPlayerClass] = useState('hidden');
   const [loginAccess, setLoginAccess] = useState({
     promptInfo: 'prompt-info hide',
     buttonLoginClass: 'hidden',
@@ -288,10 +292,10 @@ function App() {
         {sideId: 2, sideName: 'top', playerId: currentPlayersSides[2]},
         {sideId: 3, sideName: 'right', playerId: currentPlayersSides[3]},
       ]);
-      setPlayerBottomClass('shown');
-      setPlayerTopClass('shown');
-      setPlayerLeftClass('shown');
-      setPlayerRightClass('shown');
+      setBottomPlayerClass('shown');
+      setTopPlayerClass('shown');
+      setLeftPlayerClass('shown');
+      setRightPlayerClass('shown');
     } else if (currentFreeChairs === 1) {
       setPlayersSides([
         {sideId: 0, sideName: 'bottom', playerId: currentPlayersSides[0]},
@@ -299,9 +303,9 @@ function App() {
         {sideId: 2, sideName: 'top', playerId: 'none'},
         {sideId: 3, sideName: 'right', playerId: currentPlayersSides[2]},
       ]);
-      setPlayerBottomClass('shown');
-      setPlayerLeftClass('shown');
-      setPlayerRightClass('shown');
+      setBottomPlayerClass('shown');
+      setLeftPlayerClass('shown');
+      setRightPlayerClass('shown');
     } else if (currentFreeChairs === 2) {
       setPlayersSides([
         {sideId: 0, sideName: 'bottom', playerId: currentPlayersSides[0]},
@@ -309,42 +313,11 @@ function App() {
         {sideId: 2, sideName: 'top', playerId: currentPlayersSides[1]},
         {sideId: 3, sideName: 'right', playerId: 'none'},
       ]);
-      setPlayerBottomClass('shown');
-      setPlayerTopClass('shown');
+      setBottomPlayerClass('shown');
+      setTopPlayerClass('shown');
     }
     setStartGameAlertClass('hidden');
     socket.emit('start-game', {playingRoomId: ownPlayingRoomId});
-  }
-  function generateCenterTableCardDeck() {
-    let temp = [];
-    for (let loop = 0; loop < tableCardsDeck.length; loop++) {
-      temp.push(<img key={'center-card-' + loop} src={cards[tableCardsDeck[loop][0]][tableCardsDeck[loop][1]].src} title={cards[tableCardsDeck[loop][0]][tableCardsDeck[loop][1]].title} style={{ transform: 'translateX(' + (loop * 35) + '%)'}} />);
-    }
-    return temp;
-  }
-  function generateTopCardDeck() {
-    let temp = [];
-    let amount = (playerTopClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'top').playerId).cardsAmount : 0;
-    for (let loop = 0; loop < amount; loop++) {
-      temp.push(<img key={'top-card-' + loop} src={cards[0][0].src} title={cards[0][0].title} style={{ transform: 'translateX(' + (loop * 35) + '%)'}} />);
-    }
-    return temp;
-  }
-  function generateLeftCardDeck() {
-    let temp = [];
-    let amount = (playerLeftClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'left').playerId).cardsAmount : 0;
-    for (let loop = 0; loop < amount; loop++) {
-      temp.push(<img key={'left-card-' + loop} src={cards[0][0].src} title={cards[0][0].title} style={{ transform: 'translate(-50%, ' + (loop * 35 * 2 / 3) + '%) rotate(90deg)'}} />);
-    }
-    return temp;
-  }
-  function generateRightCardDeck() {
-    let temp = [];
-    let amount = (playerRightClass === 'shown') ? playingRooms[ownPlayingRoomId].players.find(player => player.playerId === playersSides.find(player => player.sideName === 'right').playerId).cardsAmount : 0;
-    for (let loop = 0; loop < amount; loop++) {
-      temp.push(<img key={'right-card-' + loop} src={cards[0][0].src} title={cards[0][0].title} style={{ transform: 'translate(-50%, ' + (loop * 35 * 2 / 3) + '%) rotate(90deg)'}} />);
-    }
-    return temp;
   }
   function selectCard(cardId) {
     let cardFigure;
@@ -475,45 +448,45 @@ function App() {
             <div id="table-state-info" className={tableStateInfoClass}>Atut: {(currentSuit === 0) ? <img src={suitSpade} alt="Ikona przedstawiająca obowiązujący atut pik" title="Atut o kolorze pik" /> : (currentSuit === 1) ? <img src={suitHeart} alt="Ikona przedstawiająca obowiązujący atut kier" title="Atut o kolorze kier" /> : (currentSuit === 2) ? <img src={suitClub} alt="Ikona przedstawiająca obowiązujący atut trefl" title="Atut o kolorze trefl" /> : (currentSuit === 3) ? <img src={suitDiamond} alt="Ikona przedstawiająca obowiązujący atut karo" title="Atut o kolorze karo" /> : null}<br />Na stole: {tableCardsDeck.length}<br />Pozostało: 16</div>
             <div id="table-center" className={tableCenterClass}>
               <div className="table-cards-deck">
-                {generateCenterTableCardDeck()}
+                <CenterTableCardsDeck tableCardsDeck={tableCardsDeck} />
               </div>
             </div>
             <div id="players-bar" className={playersBarClass}>
-              <PlayerLeft playerLeftClass={playerLeftClass} ownPlayingRoomId={ownPlayingRoomId} playingRooms={playingRooms} playersElapsedTime={playersElapsedTime} playersSides={playersSides} playingPlayerId={playingPlayerId} />
-              <PlayerTop playerTopClass={playerTopClass} ownPlayingRoomId={ownPlayingRoomId} playingRooms={playingRooms} playersElapsedTime={playersElapsedTime} playersSides={playersSides} playingPlayerId={playingPlayerId} />
-              <PlayerRight playerRightClass={playerRightClass} ownPlayingRoomId={ownPlayingRoomId} playingRooms={playingRooms} playersElapsedTime={playersElapsedTime} playersSides={playersSides} playingPlayerId={playingPlayerId} />
+              <LeftPlayerStatus leftPlayerClass={leftPlayerClass} ownPlayingRoomId={ownPlayingRoomId} playingRooms={playingRooms} playersElapsedTime={playersElapsedTime} playersSides={playersSides} playingPlayerId={playingPlayerId} />
+              <TopPlayerStatus topPlayerClass={topPlayerClass} ownPlayingRoomId={ownPlayingRoomId} playingRooms={playingRooms} playersElapsedTime={playersElapsedTime} playersSides={playersSides} playingPlayerId={playingPlayerId} />
+              <RightPlayerStatus rightPlayerClass={rightPlayerClass} ownPlayingRoomId={ownPlayingRoomId} playingRooms={playingRooms} playersElapsedTime={playersElapsedTime} playersSides={playersSides} playingPlayerId={playingPlayerId} />
             </div>
-            <div id="player-bottom" className={playerBottomClass}>
+            <div id="player-bottom" className={bottomPlayerClass}>
               <div className="players-status">
-                <PlayerBottom playerBottomClass={playerBottomClass} ownPlayingRoomId={ownPlayingRoomId} playingRooms={playingRooms} playersElapsedTime={playersElapsedTime} playersSides={playersSides} playingPlayerId={playingPlayerId} />
+                <BottomPlayerStatus bottomPlayerClass={bottomPlayerClass} ownPlayingRoomId={ownPlayingRoomId} playingRooms={playingRooms} playersElapsedTime={playersElapsedTime} playersSides={playersSides} playingPlayerId={playingPlayerId} />
               </div>
               <div className="players-cards-deck">
                 {ownCardsDeck.map((item, index) => <BottomCard key={'bottom-card-' + index} item={item} index={index} onClick={e => selectCard(index)} />)}
               </div>
             </div>
-            <div id="player-left" className={playerLeftClass}>
+            <div id="player-left" className={leftPlayerClass}>
             <div className="players-status">
-              <PlayerLeft playerLeftClass={playerLeftClass} ownPlayingRoomId={ownPlayingRoomId} playingRooms={playingRooms} playersElapsedTime={playersElapsedTime} playersSides={playersSides} playingPlayerId={playingPlayerId} />
+              <LeftPlayerStatus leftPlayerClass={leftPlayerClass} ownPlayingRoomId={ownPlayingRoomId} playingRooms={playingRooms} playersElapsedTime={playersElapsedTime} playersSides={playersSides} playingPlayerId={playingPlayerId} />
             </div>
-              <div className="players-cards-deck">
-                {generateLeftCardDeck()}
-              </div>
+            <div className="players-cards-deck">
+              <LeftPlayerCardsDeck leftPlayerClass={leftPlayerClass} ownPlayingRoomId={ownPlayingRoomId} playingRooms={playingRooms} playersSides={playersSides} />
             </div>
-            <div id="player-top" className={playerTopClass}>
+            </div>
+            <div id="player-top" className={topPlayerClass}>
             <div className="players-status">
-              <PlayerTop playerTopClass={playerTopClass} ownPlayingRoomId={ownPlayingRoomId} playingRooms={playingRooms} playersElapsedTime={playersElapsedTime} playersSides={playersSides} playingPlayerId={playingPlayerId} />
+              <TopPlayerStatus topPlayerClass={topPlayerClass} ownPlayingRoomId={ownPlayingRoomId} playingRooms={playingRooms} playersElapsedTime={playersElapsedTime} playersSides={playersSides} playingPlayerId={playingPlayerId} />
             </div>
-              <div className="players-cards-deck">
-                {generateTopCardDeck()}
-              </div>
+            <div className="players-cards-deck">
+              <TopPlayerCardsDeck topPlayerClass={topPlayerClass} ownPlayingRoomId={ownPlayingRoomId} playingRooms={playingRooms} playersSides={playersSides} />
             </div>
-            <div id="player-right" className={playerRightClass}>
+            </div>
+            <div id="player-right" className={rightPlayerClass}>
             <div className="players-status">
-              <PlayerRight playerRightClass={playerRightClass} ownPlayingRoomId={ownPlayingRoomId} playingRooms={playingRooms} playersElapsedTime={playersElapsedTime} playersSides={playersSides} playingPlayerId={playingPlayerId} />
+              <RightPlayerStatus rightPlayerClass={rightPlayerClass} ownPlayingRoomId={ownPlayingRoomId} playingRooms={playingRooms} playersElapsedTime={playersElapsedTime} playersSides={playersSides} playingPlayerId={playingPlayerId} />
             </div>
-              <div className="players-cards-deck">
-                {generateRightCardDeck()}
-              </div>
+            <div className="players-cards-deck">
+              <RightPlayerCardsDeck rightPlayerClass={rightPlayerClass} ownPlayingRoomId={ownPlayingRoomId} playingRooms={playingRooms} playersSides={playersSides} />
+            </div>
             </div>
           </div>
           <div id="aside">
