@@ -15,17 +15,22 @@ var playingRooms = [{
 	stateClass: 'waiting',
 	stateName: 'Oczekuje na graczy',
 	maxPlayers: 3,
-	chairs: [],
+	chairs: [
+		{chairId: 0, playerId: 0},
+		{chairId: 1, playerId: 1},
+		{chairId: 2, playerId: 'not-assigned'},
+		{chairId: 3, playerId: 'not-available'}
+	],
 	players: [
 		{
 			socketId: 9,
-			playerId: 0,
-			loginName: 'one'
+			playerId: 1,
+			loginName: 'neo'
 		},
 		{
 			socketId: 3,
-			playerId: 1,
-			loginName: 'two'
+			playerId: 0,
+			loginName: 'qax'
 		}],
 	durationTime: 621,
 	lowestCard: 6
@@ -39,6 +44,16 @@ var playingRooms = [{
 	players: [],
 	durationTime: null,
 	lowestCard: null
+}];
+
+var playersElapsedTime = [{
+	playingRoomId: 0, playerId: 1, time: 400
+},
+{
+	playingRoomId: 0, playerId: 2, time: 600
+},
+{
+	playingRoomId: 0, playerId: 0, time: 500
 }];
 
 function currentTime(time, showMilisecs = true) {

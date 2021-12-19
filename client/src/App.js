@@ -24,12 +24,12 @@ const ENDPOINT = 'ws://127.0.0.1:3001';
 const socket = socketIoClient.connect(ENDPOINT);
 
 function App() {
-  const [ownLoginName, setOwnLoginName] = useState('one');
-  const [ownPlayerId, setOwnPlayerId] = useState(2);
-  const [ownChairId, setOwnChairId] = useState(3);
-  const [ownPlayingRoomId, setOwnPlayingRoomId] = useState(0);
-  const [ownCardsDeck, setOwnCardsDeck] = useState([[2, 1, false], [1, 3, false], [1, 2, false], [7, 2, false], [4, 1, false], [12, 0, false], [2, 1, false]]);
-  const [ownCurrentAction, setOwnCurrentAction] = useState('addition');
+  const [ownLoginName, setOwnLoginName] = useState('');
+  const [ownPlayerId, setOwnPlayerId] = useState(null);
+  const [ownChairId, setOwnChairId] = useState(null);
+  const [ownPlayingRoomId, setOwnPlayingRoomId] = useState(null);
+  const [ownCardsDeck, setOwnCardsDeck] = useState([]);
+  const [ownCurrentAction, setOwnCurrentAction] = useState('none');
   const [ownRoomMaxPlayers, setOwnRoomMaxPlayers] = useState(2);
   const [ownRoomDurationTimeMins, setOwnRoomDurationTimeMins] = useState(5);
   const [ownRoomDurationTimeSecs, setOwnRoomDurationTimeSecs] = useState(0);
@@ -43,8 +43,8 @@ function App() {
   const [rulesContainerClass, setRulesContainerClass] = useState('hidden');
   const [roomsContainerClass, setRoomsContainerClass] = useState('hidden');
   const [customizeContainerClass, setCustomizeContainerClass] = useState('hidden');
-  const [gameContainerClass, setGameContainerClass] = useState('shown');
-  const [startGameAlertClass, setStartGameAlertClass] = useState('shown');
+  const [gameContainerClass, setGameContainerClass] = useState('hidden');
+  const [startGameAlertClass, setStartGameAlertClass] = useState('hidden');
   const [tableStateInfoClass, setTableStateInfoClass] = useState('hidden');
   const [tableCenterClass, setTableCenterClass] = useState('hidden');
   const [playersBarClass, setPlayersBarClass] = useState('hidden');
@@ -59,63 +59,12 @@ function App() {
     buttonLoginDisabled: 'disabled',
     loginValid: false
   });
-  const [tableCardsDeck, setTableCardsDeck] = useState([[1, 1], [6, 2]]);
+  const [tableCardsDeck, setTableCardsDeck] = useState([]);
   const [playersSides, setPlayersSides] = useState([]);
-  const [playingPlayerId, setPlayingPlayerId] = useState(2);
+  const [playingPlayerId, setPlayingPlayerId] = useState(null);
   const [currentSuit, setCurrentSuit] = useState(2);
-  const [playingRooms, setPlayingRooms] = useState([{
-  	playingRoomId: 0,
-  	stateClass: 'waiting',
-  	stateName: 'Oczekuje na graczy',
-  	maxPlayers: 3,
-  	chairs: [
-      {chairId: 0, playerId: 3},
-      {chairId: 1, playerId: 1},
-      {chairId: 2, playerId: 0},
-      {chairId: 3, playerId: 2}
-    ],
-  	players: [
-  		{
-  			socketId: 9,
-  			playerId: 2,
-  			loginName: 'one',
-        cardsAmount: 7
-  		},
-  		{
-  			socketId: 3,
-  			playerId: 1,
-  			loginName: 'two',
-        cardsAmount: 6
-  		},
-      {
-        socketId: 5,
-        playerId: 0,
-        loginName: 'three',
-        cardsAmount: 8
-      },
-      {
-        socketId: 7,
-        playerId: 3,
-        loginName: 'four',
-        cardsAmount: 4
-      }],
-  	durationTime: 621,
-  	lowestCard: 6
-  }]);
-  const [playersElapsedTime, setPlayersElapsedTime] = useState([
-    {
-      playerId: 1, time: 400
-    },
-    {
-      playerId: 2, time: 600
-    },
-    {
-      playerId: 0, time: 500
-    },
-    {
-      playerId: 3, time: 800
-    }
-  ]);
+  const [playingRooms, setPlayingRooms] = useState([]);
+  const [playersElapsedTime, setPlayersElapsedTime] = useState([]);
   useEffect(() => {
     socket.on('playing-rooms', (data) => {
       setPlayingRooms(data.playingRooms);
@@ -134,12 +83,13 @@ function App() {
     });
     socket.on('start-game', () => {
       setStartGameAlertClass('hidden');
+      replacePlayers();
       setOwnCardsDeck([[2, 1], [1, 3], [7, 2], [9, 1], [6, 0], [5, 2]]);
     });
-    /*setTimeout(function() {
+    setTimeout(function() {
       setLoginContainerClass('showing');
       document.getElementById('login-name').focus();
-    }, 26000);*/
+    }, 26000);
   }, []);
   function updateLoginName(loginName) {
     setOwnLoginName(loginName);
@@ -266,7 +216,7 @@ function App() {
     setOwnChairId(chairId);
     socket.emit('sit-down', {chairId: chairId, playingRoomId: ownPlayingRoomId});
   }
-  function startGame() {
+  function replacePlayers() {
     let currentPlayersSides = [];
     let currentPlayerId;
     let currentChairId = ownChairId;
@@ -317,7 +267,6 @@ function App() {
       setTopPlayerClass('shown');
     }
     setStartGameAlertClass('hidden');
-    socket.emit('start-game', {playingRoomId: ownPlayingRoomId});
   }
   function selectCard(cardId) {
     let cardFigure;
@@ -363,6 +312,9 @@ function App() {
       setButtonPutCardDisabled('disabled');
     }
     setOwnCardsDeck(cardsDeck);
+  }
+  function startGame() {
+    socket.emit('start-game', {playingRoomId: ownPlayingRoomId});
   }
   return (
     <div className="App">
@@ -444,7 +396,7 @@ function App() {
       <div id="game-container" className={gameContainerClass}>
         <div>
           <div id="table">
-            <div id="start-game-alert" onClick={startGame} className={startGameAlertClass}>{(ownPlayerId !== 0) ? 'Czekaj na potwierdzenie i\u00A0rozpoczęcie gry przez administratora' : 'Wszystkie krzesła zostały zajęte.\nCzy chcesz rozpocząć grę w\u00A0obecnym składzie?'}{(ownPlayerId === 0) ? <button type="button" onClick={startGame}>Tak, rozpocznijmy grę!</button> : null}</div>
+            <div id="start-game-alert" className={startGameAlertClass}>{(ownPlayerId !== 0) ? 'Czekaj na potwierdzenie i\u00A0rozpoczęcie gry przez administratora' : 'Wszystkie krzesła zostały zajęte.\nCzy chcesz rozpocząć grę w\u00A0obecnym składzie?'}{(ownPlayerId === 0) ? <button type="button" onClick={startGame}>Tak, rozpocznijmy grę!</button> : null}</div>
             <div id="table-state-info" className={tableStateInfoClass}>Atut: {(currentSuit === 0) ? <img src={suitSpade} alt="Ikona przedstawiająca obowiązujący atut pik" title="Atut o kolorze pik" /> : (currentSuit === 1) ? <img src={suitHeart} alt="Ikona przedstawiająca obowiązujący atut kier" title="Atut o kolorze kier" /> : (currentSuit === 2) ? <img src={suitClub} alt="Ikona przedstawiająca obowiązujący atut trefl" title="Atut o kolorze trefl" /> : (currentSuit === 3) ? <img src={suitDiamond} alt="Ikona przedstawiająca obowiązujący atut karo" title="Atut o kolorze karo" /> : null}<br />Na stole: {tableCardsDeck.length}<br />Pozostało: 16</div>
             <div id="table-center" className={tableCenterClass}>
               <div className="table-cards-deck">
