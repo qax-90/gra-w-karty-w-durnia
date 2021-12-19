@@ -57,7 +57,7 @@ function App() {
   });
   const [tableCardsDeck, setTableCardsDeck] = useState([[1, 1], [6, 2]]);
   const [playersSides, setPlayersSides] = useState([]);
-  const [playingPlayerId, setPlayingPlayerId] = useState(2);
+  const [playingPlayerId, setPlayingPlayerId] = useState(1);
   const [currentSuit, setCurrentSuit] = useState(2);
   const [playingRooms, setPlayingRooms] = useState([{
   	playingRoomId: 0,
