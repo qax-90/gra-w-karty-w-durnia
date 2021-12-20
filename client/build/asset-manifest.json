@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "/static/css/main.59968c80.chunk.css",
-    "main.js": "/static/js/main.4a6e8cee.chunk.js",
-    "main.js.map": "/static/js/main.4a6e8cee.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.059857bc.js",
-    "runtime-main.js.map": "/static/js/runtime-main.059857bc.js.map",
-    "static/js/2.1cfd244a.chunk.js": "/static/js/2.1cfd244a.chunk.js",
-    "static/js/2.1cfd244a.chunk.js.map": "/static/js/2.1cfd244a.chunk.js.map",
-    "static/js/3.5cbff4fc.chunk.js": "/static/js/3.5cbff4fc.chunk.js",
-    "static/js/3.5cbff4fc.chunk.js.map": "/static/js/3.5cbff4fc.chunk.js.map",
+    "main.css": "/static/css/main.ce8e4ef7.chunk.css",
+    "main.js": "/static/js/main.2dfbe160.chunk.js",
+    "main.js.map": "/static/js/main.2dfbe160.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.d37ecb74.js",
+    "runtime-main.js.map": "/static/js/runtime-main.d37ecb74.js.map",
+    "static/js/2.438fefef.chunk.js": "/static/js/2.438fefef.chunk.js",
+    "static/js/2.438fefef.chunk.js.map": "/static/js/2.438fefef.chunk.js.map",
+    "static/js/3.89502c0c.chunk.js": "/static/js/3.89502c0c.chunk.js",
+    "static/js/3.89502c0c.chunk.js.map": "/static/js/3.89502c0c.chunk.js.map",
     "index.html": "/index.html",
-    "static/css/main.59968c80.chunk.css.map": "/static/css/main.59968c80.chunk.css.map",
-    "static/js/2.1cfd244a.chunk.js.LICENSE.txt": "/static/js/2.1cfd244a.chunk.js.LICENSE.txt",
-    "static/media/App.css": "/static/media/Merriweather-Regular.7f357b83.eot",
-    "static/media/arrow.054b0173.svg": "/static/media/arrow.054b0173.svg",
+    "static/css/main.ce8e4ef7.chunk.css.map": "/static/css/main.ce8e4ef7.chunk.css.map",
+    "static/js/2.438fefef.chunk.js.LICENSE.txt": "/static/js/2.438fefef.chunk.js.LICENSE.txt",
+    "static/media/App.css": "/static/media/Merriweather-Regular.879731ed.svg",
+    "static/media/arrow.c9261b5c.svg": "/static/media/arrow.c9261b5c.svg",
     "static/media/card-10-karo.e4cd0bfb.svg": "/static/media/card-10-karo.e4cd0bfb.svg",
     "static/media/card-10-kier.49d83c50.svg": "/static/media/card-10-kier.49d83c50.svg",
     "static/media/card-10-pik.2bcccc69.svg": "/static/media/card-10-pik.2bcccc69.svg",
@@ -67,16 +67,16 @@
     "static/media/card-9-pik.965c740c.svg": "/static/media/card-9-pik.965c740c.svg",
     "static/media/card-9-trefl.c3cb657e.svg": "/static/media/card-9-trefl.c3cb657e.svg",
     "static/media/card-back.929060e2.webp": "/static/media/card-back.929060e2.webp",
-    "static/media/remove-icon.af93ab5a.svg": "/static/media/remove-icon.af93ab5a.svg",
-    "static/media/suit-club.3bcc8365.svg": "/static/media/suit-club.3bcc8365.svg",
-    "static/media/suit-diamond.b2512819.svg": "/static/media/suit-diamond.b2512819.svg",
-    "static/media/suit-heart.2a8aae15.svg": "/static/media/suit-heart.2a8aae15.svg",
-    "static/media/suit-spade.36033fcd.svg": "/static/media/suit-spade.36033fcd.svg"
+    "static/media/remove-icon.5cecd6b4.svg": "/static/media/remove-icon.5cecd6b4.svg",
+    "static/media/suit-club.dd2af73b.svg": "/static/media/suit-club.dd2af73b.svg",
+    "static/media/suit-diamond.4ecc23c8.svg": "/static/media/suit-diamond.4ecc23c8.svg",
+    "static/media/suit-heart.e676733a.svg": "/static/media/suit-heart.e676733a.svg",
+    "static/media/suit-spade.7fb4b131.svg": "/static/media/suit-spade.7fb4b131.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.059857bc.js",
-    "static/js/2.1cfd244a.chunk.js",
-    "static/css/main.59968c80.chunk.css",
-    "static/js/main.4a6e8cee.chunk.js"
+    "static/js/runtime-main.d37ecb74.js",
+    "static/js/2.438fefef.chunk.js",
+    "static/css/main.ce8e4ef7.chunk.css",
+    "static/js/main.2dfbe160.chunk.js"
   ]
 }
