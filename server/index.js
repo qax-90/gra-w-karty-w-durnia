@@ -30,9 +30,9 @@ var playingRooms = [{
 		{
 			socketId: 3,
 			playerId: 0,
-			loginName: 'qax'
+			loginName: 'max'
 		}],
-	durationTime: 621,
+	durationTime: 340,
 	lowestCard: 6
 },
 {
@@ -46,29 +46,33 @@ var playingRooms = [{
 	lowestCard: null
 }];
 
-var playersElapsedTime = [{
-	playingRoomId: 0, playerId: 1, time: 400
-},
-{
-	playingRoomId: 0, playerId: 2, time: 600
-},
-{
-	playingRoomId: 0, playerId: 0, time: 500
+var playersElapsedTime = [];
+
+var tableCardsDeck = [{
+	playingRoomId: 0, cardsDeck: []
 }];
 
-function currentTime(time, showMilisecs = true) {
-	let hours = (time.getHours() < 10) ? '0' + time.getHours() : time.getHours();
-	let minutes = (time.getMinutes() < 10) ? '0' + time.getMinutes() : time.getMinutes();
-	let seconds = (time.getSeconds() < 10) ? '0' + time.getSeconds() : time.getSeconds();
+var stackCardsDeck = [{
+	playingRoomId: 0, cardsDeck: []
+}];
+
+var playersCardsDecks = [];
+
+function currentTime(someTime, showMilisecs = true) {
+	let hours = (someTime.getHours() < 10) ? '0' + someTime.getHours() : someTime.getHours();
+	let minutes = (someTime.getMinutes() < 10) ? '0' + someTime.getMinutes() : someTime.getMinutes();
+	let seconds = (someTime.getSeconds() < 10) ? '0' + someTime.getSeconds() : someTime.getSeconds();
+	let milliseconds = 0;
+	let output;
+	if (someTime.getMilliseconds() < 10) milliseconds = '00' + someTime.getMilliseconds();
+	else if (someTime.getMilliseconds() < 100) milliseconds = '0' + someTime.getMilliseconds();
+	else milliseconds = someTime.getMilliseconds();
 	if (showMilisecs === true) {
-		let milliseconds = 0;
-		if (time.getMilliseconds() < 10) milliseconds = '00' + time.getMilliseconds();
-		else if (time.getMilliseconds() < 100) milliseconds = '0' + time.getMilliseconds();
-		else milliseconds = time.getMilliseconds();
-		return hours + ':' + minutes + ':' + seconds + ',' + milliseconds;
+		output = hours + ':' + minutes + ':' + seconds + ',' + milliseconds;
 	} else if (showMilisecs === false) {
-		return hours + ':' + minutes + ':' + seconds;
+		output = hours + ':' + minutes + ':' + seconds;
 	}
+	return output;
 }
 
 app.use(express.static(path.join(__dirname, '../client/build')));
@@ -96,6 +100,7 @@ io.on('connection', (socket) => {
 		socket.emit('playing-rooms', {playingRooms: playingRooms});
 	});
 	socket.on('prepare-room', (data) => {
+		time = Date.now();
 		let playingRoomId = parseInt(data.playingRoomId);
 		let loginName = data.loginName.toString();
 		playingRooms[playingRoomId].stateClass = 'preparing';
@@ -104,6 +109,7 @@ io.on('connection', (socket) => {
 		console.log(currentTime(new Date(time)) + ' - Klient o nazwie użytkownika ' + loginName + ' przygotowuje nowy pokój o numerze ' + (playingRoomId + 1));
 	});
 	socket.on('join-room', (data) => {
+		time = Date.now();
 		let socketId = socket.id;
 		let playingRoomId = parseInt(data.playingRoomId);
 		let loginName = data.loginName.toString();
@@ -122,6 +128,7 @@ io.on('connection', (socket) => {
 		}
 	});
 	socket.on('create-room', (data) => {
+		time = Date.now();
 		let socketId = socket.id;
 		let playingRoomId = parseInt(data.playingRoomId);
 		let loginName = data.loginName.toString();
@@ -150,6 +157,7 @@ io.on('connection', (socket) => {
 		console.log(currentTime(new Date(time)) + ' - Klient o nazwie użytkownika ' + loginName + ' stworzył nowy pokój o numerze ' + (playingRoomId + 1));
 	});
 	socket.on('sit-down', (data) => {
+		time = Date.now();
 		let playingRoomId = parseInt(data.playingRoomId);
 		let chairId = parseInt(data.chairId);
 		let playerId = parseInt(playingRooms[playingRoomId].players.find(player => player.socketId === socket.id).playerId);
@@ -170,10 +178,50 @@ io.on('connection', (socket) => {
 		io.in(playingRoomId).emit('chat-message', {message: message, addTime: addTime, loginName: loginName});
 	});
 	socket.on('start-game', (data) => {
+		time = Date.now();
 		let playingRoomId = parseInt(data.playingRoomId);
 		let playerId = parseInt(playingRooms[playingRoomId].players.find(player => player.socketId === socket.id).playerId);
 		let loginName = playingRooms[playingRoomId].players.find(player => player.socketId === socket.id).loginName.toString();
-		io.emit('start-game');
+		let randomCardsDeck = [];
+		playersElapsedTime = [];
+		for (let loop = playingRooms[playingRoomId].lowestCard; loop <= 14; loop++) {
+			for (let loop2 = 0; loop2 <= 3; loop2++) {
+				randomCardsDeck.push([loop, loop2]);
+			}
+		}
+		let cardsAmount = randomCardsDeck.length;
+		let randomNumber = 0;
+		let temp;
+		while (cardsAmount--) {
+			randomNumber = Math.floor(Math.random() * (cardsAmount + 1));
+			temp = randomCardsDeck[cardsAmount];
+			randomCardsDeck[cardsAmount] = randomCardsDeck[randomNumber];
+			randomCardsDeck[randomNumber] = temp;
+		}
+		let cardsDeck = [];
+		let ownCardsDeck = [];
+		let socketId;
+		for (let loop = 0; loop < 6; loop++) {
+			playingRooms[playingRoomId].players.forEach(player => {
+				if (typeof cardsDeck[player.playerId] === 'undefined') {
+					cardsDeck[player.playerId] = [];
+				}
+				cardsDeck[player.playerId].push(randomCardsDeck.pop());
+			});
+		}
+		playingRooms[playingRoomId].players.forEach(player => {
+			ownCardsDeck = [];
+			playersCardsDecks.push({playingRoomId: playingRoomId, playerId: player.playerId, cardsDeck: cardsDeck[player.playerId]});
+			playingRooms[playingRoomId].players.find(player2 => player2.playerId === player.playerId).cardsAmount = cardsDeck[player.playerId].length;
+			playersElapsedTime.push({playingRoomId: playingRoomId, playerId: player.playerId, time: playingRooms[playingRoomId].durationTime});
+			for (let loop = 0; loop < cardsDeck[player.playerId].length; loop++) {
+				cardsDeck[player.playerId][loop][2] = false;
+				ownCardsDeck = cardsDeck[player.playerId];
+			}
+			socketId = playingRooms[playingRoomId].players.find(player2 => player2.playerId === player.playerId).socketId;
+			io.to(socketId).emit('own-cards-deck', {ownCardsDeck: ownCardsDeck});
+		});
+		io.in(playingRoomId).emit('start-game', {playingRooms: playingRooms, playersElapsedTime: playersElapsedTime});
 		console.log(currentTime(new Date(time)) + ' - Klient o nazwie użytkownika ' + loginName + ' rozpoczął grę w pokoju nr ' + (playingRoomId + 1));
 	});
 });

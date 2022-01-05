@@ -25,7 +25,7 @@ p.welcome-text {
 }
 
 p.copyright-text::before {
-  content: 'Copyright © 2021 by qax';
+  content: 'Copyright © 2022 by qax';
 }
 
 p.welcome-text::before {

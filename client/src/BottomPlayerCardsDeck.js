@@ -1,13 +1,18 @@
-import React from 'react';
+import React, { Component } from 'react';
 import cards from './cards'
 
-function BottomPlayerCardsDeck(props) {
-  function selectCard(cardId) {
-    props.onClick(cardId);
+export default class BottomPlayerCardsDeck extends Component {
+  selectCard = (cardId) => {
+    this.props.onClick(cardId);
   }
-  return (
-    <img src={cards[props.item[0]][props.item[1]].src} className={(props.item[2]) ? 'selected' : 'not-selected'} alt={cards[props.item[0]][props.item[1]].title} title={cards[props.item[0]][props.item[1]].title} style={{ transform: 'translateX(' + (props.index * 35) + '%)'}} onClick={e => selectCard(props.index)} />
-  )
+  render() {
+    return (
+      <img src={cards[this.props.bottomCard[0]][this.props.bottomCard[1]].src}
+      className={(this.props.bottomCard[2]) ? 'selected' : 'not-selected'}
+      alt={cards[this.props.bottomCard[0]][this.props.bottomCard[1]].title}
+      title={cards[this.props.bottomCard[0]][this.props.bottomCard[1]].title}
+      style={{transform: 'translateX(' + (this.props.bottomCardIndex * 35) + '%)'}}
+      onClick={() => this.selectCard(this.props.bottomCardIndex)} />
+    )
+  }
 }
-
-export default BottomPlayerCardsDeck;
