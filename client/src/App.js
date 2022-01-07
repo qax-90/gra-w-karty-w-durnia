@@ -18,7 +18,7 @@ import suitSpade from './suits/suit-spade.svg'
 import './App.css';
 import './index.css';
 import './game.css';
-const ENDPOINT = 'ws://127.0.0.1:3001';
+const ENDPOINT = 'ws://' + window.location.hostname + ':3001';
 const socket = socketIoClient.connect(ENDPOINT);
 
 export default class App extends Component {
